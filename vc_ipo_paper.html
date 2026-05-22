@@ -1,0 +1,2107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Venture Capital & the Decline of IPOs — Jae Yung Kim</title>
+<meta name="description" content="A continuous-time structural model of IPO filing outcomes. Venture-backed and independent firms withdraw at equal rates — but to dramatically unequal ends.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230f0e13'/><path d='M16 5 L25 16 L16 27 L7 16 Z' fill='none' stroke='%23d4ac57' stroke-width='2'/><circle cx='16' cy='16' r='3' fill='%23e4694b'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400;1,6..72,500&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   VENTURE CAPITAL & THE DECLINE OF IPOs — research broadsheet
+   Aesthetic: midnight financial almanac · ink · parchment · gold leaf
+   ============================================================ */
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --ink:#0f0e13;          /* deep warm charcoal — page */
+  --ink-1:#15141c;        /* raised band */
+  --ink-2:#1b1a25;        /* cards */
+  --ink-3:#23222f;        /* card hover / borders */
+  --paper:#efe7d6;        /* headings / primary */
+  --prose:#cdc4b1;        /* body text */
+  --dim:#988f7c;          /* secondary */
+  --faint:#6b6453;        /* captions, faint */
+  --gold:#d4ac57;         /* accent / rules */
+  --gold-bright:#ecca80;  /* accent highlight */
+  --vc:#e4694b;           /* VC — ember */
+  --vc-soft:#f0a48f;
+  --nonvc:#6ea7c6;        /* non-VC — dusty blue */
+  --nonvc-soft:#a9cad9;
+  --sage:#8fa67e;         /* sparing — "value created" */
+  --line:rgba(239,231,214,.10);
+  --line-2:rgba(239,231,214,.055);
+  --gold-line:rgba(212,172,87,.32);
+  --vc-bg:rgba(228,105,75,.13);
+  --nonvc-bg:rgba(110,167,198,.13);
+  --gold-bg:rgba(212,172,87,.10);
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --serif:'Newsreader',Georgia,serif;
+  --display:'Fraunces','Newsreader',serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+
+body{
+  background:var(--ink);
+  color:var(--prose);
+  font-family:var(--serif);
+  font-weight:400;
+  font-size:18px;
+  line-height:1.78;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+
+::selection{background:rgba(212,172,87,.26);color:#fff}
+
+/* ---- atmosphere: grain + vignette --------------------------- */
+.grain{
+  position:fixed;inset:0;width:100%;height:100%;
+  pointer-events:none;z-index:120;opacity:.045;
+  mix-blend-mode:overlay;
+}
+.vignette{
+  position:fixed;inset:0;pointer-events:none;z-index:1;
+  background:radial-gradient(130% 90% at 50% 0%,transparent 55%,rgba(0,0,0,.55) 100%);
+}
+
+/* ---- reading progress -------------------------------------- */
+.progress{
+  position:fixed;top:0;left:0;right:0;height:2px;z-index:130;
+  background:transparent;
+}
+.progress__bar{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--vc),var(--gold),var(--gold-bright));
+  box-shadow:0 0 14px rgba(212,172,87,.6);
+  transition:width .12s linear;
+}
+
+/* ---- masthead --------------------------------------------- */
+.masthead{
+  position:fixed;top:0;left:0;right:0;z-index:110;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px clamp(18px,4vw,52px);
+  background:rgba(15,14,19,.72);
+  backdrop-filter:blur(14px) saturate(1.2);
+  -webkit-backdrop-filter:blur(14px) saturate(1.2);
+  border-bottom:1px solid var(--line-2);
+  transition:transform .45s var(--ease),background .4s ease;
+}
+.masthead.hidden{transform:translateY(-104%)}
+.brand{display:flex;align-items:center;gap:13px;text-decoration:none}
+.brand__mark{
+  width:30px;height:30px;flex:none;display:grid;place-items:center;
+  border:1px solid var(--gold-line);border-radius:2px;
+}
+.brand__mark svg{width:16px;height:16px;display:block}
+.brand__txt{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--dim);line-height:1.35;
+}
+.brand__txt b{color:var(--paper);font-weight:500;display:block}
+.nav{display:flex;gap:2px;align-items:center}
+.nav a{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--dim);text-decoration:none;
+  padding:7px 11px;border-radius:3px;position:relative;
+  transition:color .25s ease;
+}
+.nav a:hover{color:var(--paper)}
+.nav a.active{color:var(--gold-bright)}
+.nav a.active::after{
+  content:"";position:absolute;left:11px;right:11px;bottom:2px;height:1px;
+  background:var(--gold);
+}
+.nav__num{opacity:.5;margin-right:5px}
+
+/* ---- shared layout ---------------------------------------- */
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,5vw,64px)}
+.col{max-width:720px}
+.col-wide{max-width:940px}
+section{position:relative}
+.scroll-anchor{scroll-margin-top:90px}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{
+  position:relative;min-height:100svh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px clamp(20px,5vw,64px) 70px;
+  overflow:hidden;
+}
+.hero__bg{position:absolute;inset:0;z-index:0;pointer-events:none}
+.hero__glow{
+  position:absolute;top:-22%;left:50%;transform:translateX(-50%);
+  width:1100px;height:760px;
+  background:radial-gradient(ellipse at center,rgba(212,172,87,.16),transparent 66%);
+  filter:blur(20px);
+}
+.hero__curve{position:absolute;inset:0;width:100%;height:100%}
+.hero__inner{position:relative;z-index:2;max-width:1180px;margin:0 auto;width:100%}
+
+.kicker{
+  font-family:var(--mono);font-size:11px;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--gold);
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.kicker::before{
+  content:"";width:42px;height:1px;background:var(--gold);
+  display:inline-block;
+}
+.hero__title{
+  font-family:var(--display);
+  font-weight:380;
+  font-size:clamp(2.85rem,7.4vw,6.3rem);
+  line-height:1.0;
+  letter-spacing:-.022em;
+  color:var(--paper);
+  margin:.32em 0 0;
+  font-optical-sizing:auto;
+}
+.hero__title .line{display:block}
+.hero__title .line>span{display:block}
+.hero__title em{
+  font-style:italic;font-weight:340;
+  color:var(--gold-bright);
+}
+.hero__rule{
+  width:0;height:1px;background:var(--gold-line);
+  margin:clamp(26px,4vh,46px) 0 24px;max-width:560px;
+}
+.hero__meta{
+  display:flex;gap:28px;flex-wrap:wrap;align-items:baseline;
+}
+.hero__byline{
+  font-family:var(--display);font-style:italic;font-weight:400;
+  font-size:1.32rem;color:var(--paper);
+}
+.hero__byline span{
+  font-family:var(--mono);font-style:normal;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+  display:block;margin-top:4px;
+}
+.hero__dek{
+  font-family:var(--serif);font-size:clamp(1.12rem,2vw,1.4rem);
+  font-weight:300;line-height:1.6;color:var(--prose);
+  max-width:600px;margin-top:8px;
+}
+.hero__dek b{color:var(--paper);font-weight:500}
+.hero__chips{
+  display:flex;gap:14px;flex-wrap:wrap;margin-top:clamp(28px,5vh,52px);
+}
+.chip{
+  border:1px solid var(--line);border-radius:3px;
+  padding:13px 19px;background:rgba(255,255,255,.012);
+  min-width:140px;
+}
+.chip b{
+  font-family:var(--display);font-weight:400;
+  font-size:1.78rem;color:var(--gold-bright);display:block;
+  line-height:1;font-variant-numeric:tabular-nums;
+}
+.chip span{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--dim);
+  display:block;margin-top:8px;
+}
+.scrollcue{
+  position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:9px;z-index:2;
+  font-family:var(--mono);font-size:9px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--faint);
+}
+.scrollcue .bar{width:1px;height:42px;background:linear-gradient(var(--gold),transparent);position:relative;overflow:hidden}
+.scrollcue .bar::after{content:"";position:absolute;top:0;left:0;width:1px;height:14px;background:var(--gold-bright);animation:cue 2.1s var(--ease) infinite}
+@keyframes cue{0%{transform:translateY(-16px)}70%,100%{transform:translateY(46px)}}
+
+/* hero load animation */
+.reveal-load{opacity:0;transform:translateY(26px)}
+.hero.ready .reveal-load{animation:rise 1.05s var(--ease) forwards}
+.hero.ready .reveal-load.d1{animation-delay:.05s}
+.hero.ready .reveal-load.d2{animation-delay:.16s}
+.hero.ready .reveal-load.d3{animation-delay:.27s}
+.hero.ready .reveal-load.d4{animation-delay:.40s}
+.hero.ready .reveal-load.d5{animation-delay:.52s}
+.hero.ready .reveal-load.d6{animation-delay:.64s}
+.hero.ready .reveal-load.d7{animation-delay:.78s}
+.hero.ready .reveal-load.d8{animation-delay:.92s}
+@keyframes rise{to{opacity:1;transform:none}}
+.hero.ready .hero__rule{animation:rulew 1.1s var(--ease) .5s forwards}
+@keyframes rulew{to{width:100%}}
+
+/* ============================================================
+   GENERIC SECTION SCAFFOLD
+   ============================================================ */
+.band{padding:clamp(76px,11vh,140px) 0;position:relative}
+.band--raised{background:var(--ink-1);border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2)}
+
+.sec-mark{
+  position:absolute;font-family:var(--display);font-weight:300;
+  font-size:clamp(9rem,22vw,20rem);color:rgba(239,231,214,.022);
+  line-height:.7;top:-.06em;right:2vw;z-index:0;pointer-events:none;
+  user-select:none;
+}
+
+.eyebrow{
+  display:flex;align-items:center;gap:15px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.26em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:26px;
+}
+.eyebrow .no{color:var(--vc-soft)}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--line);max-width:90px}
+
+h2.head{
+  font-family:var(--display);font-weight:380;
+  font-size:clamp(2.1rem,4.7vw,3.7rem);
+  line-height:1.06;letter-spacing:-.018em;color:var(--paper);
+  margin-bottom:.5em;
+}
+h2.head em{font-style:italic;color:var(--gold-bright);font-weight:340}
+
+.lead{
+  font-family:var(--serif);font-weight:300;
+  font-size:clamp(1.18rem,2.1vw,1.55rem);
+  line-height:1.58;color:var(--paper);
+}
+.lead b{font-weight:500;color:#fff}
+
+.prose p{margin-bottom:1.15em;color:var(--prose)}
+.prose p:last-child{margin-bottom:0}
+.prose b,.prose strong{color:var(--paper);font-weight:500}
+.prose em{font-style:italic;color:var(--paper)}
+.prose .vc{color:var(--vc-soft);font-style:normal;font-weight:500}
+.prose .nv{color:var(--nonvc-soft);font-style:normal;font-weight:500}
+.prose a{color:var(--gold-bright);text-decoration:none;border-bottom:1px solid var(--gold-line)}
+
+.dropcap::first-letter{
+  font-family:var(--display);font-weight:400;
+  float:left;font-size:5.1rem;line-height:.78;
+  padding:9px 14px 0 0;color:var(--gold-bright);
+}
+
+/* ornamental divider */
+.divider{display:flex;align-items:center;gap:18px;margin:clamp(48px,7vh,84px) 0}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
+.divider span{
+  width:8px;height:8px;border:1px solid var(--gold-line);
+  transform:rotate(45deg);
+}
+
+/* figure / caption */
+figure{margin:0}
+.figcap{
+  font-family:var(--mono);font-size:10.5px;line-height:1.65;
+  letter-spacing:.03em;color:var(--faint);
+  margin-top:18px;display:flex;gap:12px;
+}
+.figcap .tag{color:var(--gold);white-space:nowrap;flex:none}
+.figcap b{color:var(--dim);font-weight:500}
+
+/* reveal-on-scroll */
+[data-reveal]{opacity:0;transform:translateY(30px);
+  transition:opacity 1s var(--ease),transform 1s var(--ease)}
+[data-reveal].in{opacity:1;transform:none}
+
+/* ============================================================
+   ABSTRACT
+   ============================================================ */
+.abstract-panel{
+  border:1px solid var(--line);border-top:2px solid var(--gold);
+  background:linear-gradient(180deg,rgba(212,172,87,.04),transparent 40%);
+  padding:clamp(34px,5vw,64px);position:relative;
+}
+.abstract-panel .label{
+  position:absolute;top:-9px;left:clamp(34px,5vw,64px);
+  background:var(--ink);padding:0 12px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--gold);
+}
+.abstract-text{
+  font-family:var(--display);font-weight:300;font-style:italic;
+  font-size:clamp(1.2rem,2.3vw,1.66rem);line-height:1.55;
+  color:var(--paper);
+}
+.abstract-text b{font-style:normal;font-weight:500;color:#fff;
+  border-bottom:1px solid var(--gold-line)}
+.meta-row{
+  display:flex;flex-wrap:wrap;gap:30px;margin-top:34px;
+  padding-top:26px;border-top:1px solid var(--line);
+}
+.meta-block .k{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--faint);margin-bottom:9px;
+}
+.meta-block .v{display:flex;gap:8px;flex-wrap:wrap}
+.tagpill{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;
+  color:var(--prose);border:1px solid var(--line);
+  padding:5px 11px;border-radius:2px;
+}
+.tagpill.jel{color:var(--gold-bright);border-color:var(--gold-line)}
+
+/* roadmap */
+.roadmap{
+  margin-top:46px;display:grid;
+  grid-template-columns:repeat(5,1fr);gap:1px;
+  background:var(--line);border:1px solid var(--line);
+}
+.roadmap__step{
+  background:var(--ink);padding:24px 20px;
+  transition:background .35s ease;
+}
+.roadmap__step:hover{background:var(--ink-2)}
+.roadmap__step .n{
+  font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+  color:var(--vc-soft);margin-bottom:11px;
+}
+.roadmap__step h4{
+  font-family:var(--display);font-weight:450;font-size:1.12rem;
+  color:var(--paper);margin-bottom:7px;line-height:1.2;
+}
+.roadmap__step p{font-size:.86rem;line-height:1.55;color:var(--dim)}
+
+/* ============================================================
+   STAT GRID / NUMBER BLOCKS
+   ============================================================ */
+.statgrid{display:grid;gap:1px;background:var(--line);
+  border:1px solid var(--line);margin:0}
+.statgrid.c3{grid-template-columns:repeat(3,1fr)}
+.statgrid.c4{grid-template-columns:repeat(4,1fr)}
+.statcell{background:var(--ink);padding:30px 26px;position:relative}
+.statcell .big{
+  font-family:var(--display);font-weight:380;
+  font-size:clamp(2.5rem,4.6vw,3.7rem);line-height:.96;
+  color:var(--gold-bright);font-variant-numeric:tabular-nums;
+  letter-spacing:-.02em;
+}
+.statcell .big.vc{color:var(--vc)}
+.statcell .big.nv{color:var(--nonvc)}
+.statcell .sub{
+  font-family:var(--serif);font-size:.98rem;color:var(--prose);
+  margin-top:12px;line-height:1.5;
+}
+.statcell .sub b{color:var(--paper);font-weight:500}
+.statcell .tick{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--faint);margin-top:10px;
+}
+
+/* ============================================================
+   CHART GENERICS
+   ============================================================ */
+.chart-frame{
+  border:1px solid var(--line);background:var(--ink-1);
+  padding:clamp(24px,3.4vw,44px);position:relative;
+}
+.chart-frame--plain{background:transparent;border-color:var(--line-2)}
+.chart-title{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--paper);margin-bottom:5px;
+}
+.chart-sub{
+  font-family:var(--serif);font-size:.92rem;color:var(--dim);
+  margin-bottom:26px;font-style:italic;
+}
+.legend{display:flex;gap:22px;flex-wrap:wrap;margin-top:6px}
+.legend .it{
+  display:flex;align-items:center;gap:9px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim);
+}
+.legend .sw{width:13px;height:13px;flex:none;border-radius:2px}
+.legend .sw.vc{background:var(--vc)}
+.legend .sw.nv{background:var(--nonvc)}
+.legend .sw.gd{background:var(--gold)}
+.legend .sw.ring{background:transparent;border:1.5px solid var(--gold)}
+svg{display:block;overflow:visible}
+text{font-family:var(--mono)}
+
+/* ============================================================
+   THE PUZZLE — twin columns
+   ============================================================ */
+.puzzle-twin{
+  display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  background:var(--line);border:1px solid var(--line);margin-top:8px;
+}
+.ptile{background:var(--ink);padding:clamp(26px,3vw,40px);position:relative}
+.ptile.vc{border-top:2px solid var(--vc)}
+.ptile.nv{border-top:2px solid var(--nonvc)}
+.ptile .who{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;margin-bottom:4px;
+}
+.ptile.vc .who{color:var(--vc)}
+.ptile.nv .who{color:var(--nonvc)}
+.ptile .whon{font-family:var(--display);font-weight:420;font-size:1.3rem;color:var(--paper);margin-bottom:22px}
+.prow{display:flex;justify-content:space-between;align-items:baseline;
+  padding:14px 0;border-bottom:1px solid var(--line-2)}
+.prow:last-child{border-bottom:0}
+.prow .pl{font-size:.92rem;color:var(--dim)}
+.prow .pv{font-family:var(--display);font-weight:400;font-size:1.7rem;
+  font-variant-numeric:tabular-nums}
+.ptile.vc .pv{color:var(--vc-soft)}
+.ptile.nv .pv{color:var(--nonvc-soft)}
+.prow .pv.muted{color:var(--dim)!important;font-size:1.25rem}
+
+.verdict{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;
+}
+.verdict .v{
+  border:1px solid var(--line);padding:20px 22px;
+  background:rgba(255,255,255,.012);
+}
+.verdict .v .t{
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;margin-bottom:10px;
+}
+.verdict .v.eq .t{color:var(--nonvc)}
+.verdict .v.gap .t{color:var(--vc)}
+.verdict .v .d{font-family:var(--display);font-weight:380;
+  font-size:1.78rem;color:var(--paper);line-height:1.1}
+.verdict .v p{font-size:.86rem;color:var(--dim);margin-top:8px;line-height:1.5}
+
+/* aside box */
+.aside{
+  border-left:2px solid var(--gold);background:var(--gold-bg);
+  padding:24px 28px;margin:8px 0;
+}
+.aside .h{
+  font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:11px;
+}
+.aside p{font-size:.96rem;color:var(--prose);line-height:1.66}
+.aside .eq{
+  font-family:var(--display);font-style:italic;font-size:1.16rem;
+  color:var(--paper);text-align:center;margin:16px 0;
+}
+
+/* equation block */
+.eqn{
+  border:1px solid var(--line);background:var(--ink-2);
+  padding:26px 28px;margin:26px 0;text-align:center;position:relative;
+}
+.eqn .formula{
+  font-family:var(--display);font-style:italic;font-weight:400;
+  font-size:clamp(1.15rem,2.4vw,1.6rem);color:var(--paper);
+  letter-spacing:.01em;
+}
+.eqn .formula .op{color:var(--gold-bright);font-style:normal}
+.eqn .formula .vc{color:var(--vc-soft)}
+.eqn .num{
+  position:absolute;right:18px;top:50%;transform:translateY(-50%);
+  font-family:var(--mono);font-size:11px;color:var(--faint);
+}
+.eqn .note{font-family:var(--mono);font-size:10px;color:var(--faint);
+  margin-top:14px;letter-spacing:.04em}
+
+/* ============================================================
+   MECHANISM DIAGRAM
+   ============================================================ */
+.mech{display:grid;gap:18px}
+.mech__file{
+  border:1px solid var(--gold-line);background:var(--gold-bg);
+  padding:18px 24px;text-align:center;border-radius:3px;
+}
+.mech__file .t{font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--gold)}
+.mech__file .s{font-family:var(--display);font-size:1.24rem;color:var(--paper);margin-top:4px}
+.mech__decision{border:1px solid var(--line);background:var(--ink-2);border-radius:3px;padding:22px 22px 24px}
+.mech__decision-h{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);text-align:center;margin-bottom:18px}
+.mech__choice{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.choice{border:1px solid var(--line);border-radius:3px;padding:20px 20px 18px;background:rgba(255,255,255,.014);transition:background .3s var(--ease),transform .3s var(--ease)}
+.choice:hover{background:var(--ink-3);transform:translateY(-3px)}
+.choice--complete{border-top:2px solid var(--gold)}
+.choice--withdraw{border-top:2px solid var(--vc)}
+.choice--wait{border-top:2px solid var(--faint)}
+.choice__tag{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:9px}
+.choice--complete .choice__tag{color:var(--gold)}
+.choice--withdraw .choice__tag{color:var(--vc)}
+.choice--wait .choice__tag{color:var(--dim)}
+.choice h5{font-family:var(--display);font-weight:480;font-size:1.2rem;color:var(--paper);margin-bottom:8px;line-height:1.15}
+.choice p{font-size:.85rem;color:var(--prose);line-height:1.56}
+.choice__pay{font-family:var(--mono);font-size:11.5px;color:var(--gold-bright);margin-top:14px;padding-top:12px;border-top:1px solid var(--line-2)}
+.choice__pay .plusB{color:var(--vc-soft)}
+.choice__note{font-family:var(--mono);font-size:9px;color:var(--faint);margin-top:8px;line-height:1.6}
+.mech__bridge{display:flex;align-items:center;justify-content:center;gap:12px;background:var(--vc-bg);border:1px solid rgba(228,105,75,.26);border-radius:3px;padding:11px 22px}
+.mech__bridge .a{color:var(--vc);font-size:13px;line-height:1}
+.mech__bridge .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--vc-soft);text-align:center}
+.mech__bridge .lbl b{color:#fff;font-weight:600}
+.mech__split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.channel{
+  border:1px solid var(--line);background:var(--ink-2);
+  padding:26px;position:relative;border-radius:3px;
+}
+.channel--distress{border-top:2px solid var(--dim)}
+.channel--strategic{border-top:2px solid var(--vc)}
+.channel .ch-tag{
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;margin-bottom:6px;
+}
+.channel--distress .ch-tag{color:var(--dim)}
+.channel--strategic .ch-tag{color:var(--vc)}
+.channel h4{font-family:var(--display);font-weight:450;font-size:1.3rem;
+  color:var(--paper);margin-bottom:14px}
+.channel p{font-size:.93rem;color:var(--prose);line-height:1.62}
+.channel .rate{
+  font-family:var(--mono);font-size:11px;color:var(--gold-bright);
+  margin-top:14px;padding-top:14px;border-top:1px solid var(--line-2);
+}
+.party-split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.party{padding:16px;border-radius:3px}
+.party.vc{background:var(--vc-bg);border:1px solid rgba(228,105,75,.25)}
+.party.nv{background:var(--nonvc-bg);border:1px solid rgba(110,167,198,.25)}
+.party .pn{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;
+  text-transform:uppercase;margin-bottom:7px}
+.party.vc .pn{color:var(--vc)}
+.party.nv .pn{color:var(--nonvc)}
+.party .pd{font-size:.85rem;color:var(--prose);line-height:1.5}
+.party .out{font-family:var(--display);font-style:italic;font-size:1rem;
+  margin-top:9px}
+.party.vc .out{color:var(--vc-soft)}
+.party.nv .out{color:var(--nonvc-soft)}
+
+/* control threshold strip */
+.vstar{margin-top:8px}
+.vstar__bar{
+  display:grid;grid-template-columns:49% 2% 49%;
+  border:1px solid var(--line);height:96px;border-radius:3px;overflow:hidden;
+}
+.vstar__seg{padding:16px 20px;display:flex;flex-direction:column;justify-content:center}
+.vstar__seg.vc{background:linear-gradient(110deg,var(--vc-bg),transparent)}
+.vstar__seg.nv{background:linear-gradient(250deg,var(--nonvc-bg),transparent)}
+.vstar__mark{background:var(--gold);position:relative}
+.vstar__mark::after{
+  content:"V*";position:absolute;top:-22px;left:50%;transform:translateX(-50%);
+  font-family:var(--mono);font-size:11px;color:var(--gold-bright);
+}
+.vstar__seg .r{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;
+  text-transform:uppercase}
+.vstar__seg.vc .r{color:var(--vc);text-align:left}
+.vstar__seg.nv .r{color:var(--nonvc);text-align:right}
+.vstar__seg .d{font-family:var(--display);font-size:1.04rem;color:var(--paper);margin-top:5px}
+.vstar__seg.nv{align-items:flex-end;text-align:right}
+.vstar__axis{display:flex;justify-content:space-between;
+  font-family:var(--mono);font-size:9.5px;color:var(--faint);margin-top:9px}
+
+/* ============================================================
+   PROPOSITION CARDS
+   ============================================================ */
+.props{display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  background:var(--line);border:1px solid var(--line)}
+.prop{background:var(--ink);padding:30px 30px 28px;transition:background .35s ease}
+.prop:hover{background:var(--ink-2)}
+.prop .pno{
+  font-family:var(--display);font-weight:300;font-size:2.4rem;
+  color:var(--gold);line-height:1;
+}
+.prop h4{font-family:var(--display);font-weight:480;font-size:1.18rem;
+  color:var(--paper);margin:10px 0 9px}
+.prop p{font-size:.9rem;color:var(--prose);line-height:1.62}
+.prop .ev{
+  font-family:var(--mono);font-size:10px;color:var(--gold-bright);
+  margin-top:13px;letter-spacing:.03em;
+}
+
+/* ============================================================
+   PARAMETER CARDS
+   ============================================================ */
+.params-key{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--line);border:1px solid var(--line)}
+.pcard{background:var(--ink);padding:28px 24px;position:relative;
+  transition:background .35s ease}
+.pcard:hover{background:var(--ink-2)}
+.pcard .sym{
+  font-family:var(--display);font-style:italic;font-weight:400;
+  font-size:2.2rem;color:var(--gold-bright);line-height:1;
+}
+.pcard .pname{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--dim);margin:12px 0 16px;
+  min-height:2.4em;
+}
+.pcard .pest{
+  font-family:var(--display);font-weight:380;font-size:2.6rem;
+  color:var(--paper);font-variant-numeric:tabular-nums;line-height:1;
+}
+.pcard .pstat{
+  font-family:var(--mono);font-size:10px;color:var(--faint);
+  margin-top:9px;
+}
+.pcard .pstat .star{color:var(--vc-soft)}
+.pcard .pdesc{font-size:.86rem;color:var(--prose);line-height:1.55;
+  margin-top:14px;padding-top:14px;border-top:1px solid var(--line-2)}
+
+.params-rest{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;
+  background:var(--line);border:1px solid var(--line);margin-top:1px}
+.prest{background:var(--ink);padding:20px 18px}
+.prest .sym{font-family:var(--display);font-style:italic;font-size:1.35rem;
+  color:var(--gold)}
+.prest .est{font-family:var(--display);font-size:1.6rem;color:var(--paper);
+  font-variant-numeric:tabular-nums;margin-top:6px}
+.prest .nm{font-family:var(--mono);font-size:9px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--faint);margin-top:7px;line-height:1.4}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+.tbl-wrap{border:1px solid var(--line);background:var(--ink-1);overflow-x:auto}
+table.data{width:100%;border-collapse:collapse;min-width:540px}
+table.data th,table.data td{padding:13px 18px;text-align:right}
+table.data th:first-child,table.data td:first-child{text-align:left}
+table.data thead th{
+  font-family:var(--mono);font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--gold);
+  border-bottom:1px solid var(--gold-line);font-weight:500;
+}
+table.data tbody td{
+  font-family:var(--mono);font-size:13px;color:var(--prose);
+  border-bottom:1px solid var(--line-2);
+}
+table.data tbody td:first-child{font-family:var(--serif);font-size:15px;color:var(--paper)}
+table.data tbody tr:hover{background:rgba(255,255,255,.018)}
+table.data .se{color:var(--faint);font-size:11px}
+table.data .hl{background:var(--vc-bg)}
+table.data .hl td{color:var(--vc-soft)}
+table.data .hl td:first-child{color:var(--vc-soft)}
+table.data .pop{color:var(--gold-bright);font-weight:600}
+table.data .sub td{
+  font-family:var(--mono)!important;font-size:10px;color:var(--faint);
+  border-bottom:0;padding-top:4px;padding-bottom:4px;
+}
+.star{color:var(--vc-soft)}
+
+/* B slider interactive */
+.bsim{
+  display:grid;grid-template-columns:1.1fr .9fr;gap:1px;
+  background:var(--line);border:1px solid var(--line);margin-top:8px;
+}
+.bsim__plot{background:var(--ink);padding:clamp(24px,3vw,38px)}
+.bsim__panel{background:var(--ink);padding:clamp(24px,3vw,38px);
+  display:flex;flex-direction:column;justify-content:center}
+.bsim__read{font-family:var(--display);font-weight:340;
+  font-size:clamp(3.4rem,7vw,5.6rem);color:var(--gold-bright);
+  line-height:.95;font-variant-numeric:tabular-nums}
+.bsim__read small{font-size:.34em;color:var(--dim);font-family:var(--mono);
+  letter-spacing:.1em}
+.bsim__lbl{font-family:var(--mono);font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.bsim__bval{font-family:var(--display);font-style:italic;font-size:1.5rem;
+  color:var(--paper);margin-bottom:4px}
+.slider{
+  -webkit-appearance:none;appearance:none;width:100%;height:2px;
+  background:var(--line);outline:none;margin:22px 0 8px;
+}
+.slider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:22px;height:22px;
+  border-radius:50%;background:var(--gold-bright);cursor:grab;
+  border:3px solid var(--ink);box-shadow:0 0 0 1px var(--gold),0 0 16px rgba(212,172,87,.6);
+}
+.slider::-moz-range-thumb{
+  width:22px;height:22px;border-radius:50%;background:var(--gold-bright);
+  cursor:grab;border:3px solid var(--ink);box-shadow:0 0 0 1px var(--gold)}
+.slider__scale{display:flex;justify-content:space-between;
+  font-family:var(--mono);font-size:9.5px;color:var(--faint)}
+.bsim__hint{font-family:var(--serif);font-size:.9rem;color:var(--dim);
+  font-style:italic;margin-top:18px;line-height:1.55}
+
+/* takeaways */
+.takeaways{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;
+  background:var(--line);border:1px solid var(--line)}
+.tk{background:var(--ink);padding:30px 28px}
+.tk .ti{font-family:var(--display);font-weight:300;font-size:2rem;
+  color:var(--gold);line-height:1;margin-bottom:14px}
+.tk h4{font-family:var(--display);font-weight:480;font-size:1.16rem;
+  color:var(--paper);margin-bottom:9px}
+.tk p{font-size:.9rem;color:var(--prose);line-height:1.6}
+
+/* pull quote */
+.pull{
+  font-family:var(--display);font-weight:300;font-style:italic;
+  font-size:clamp(1.7rem,3.7vw,3rem);line-height:1.22;
+  color:var(--paper);text-align:center;
+  max-width:920px;margin:0 auto;letter-spacing:-.01em;
+}
+.pull .mk{color:var(--gold);font-style:normal}
+.pull em{color:var(--gold-bright)}
+.pull-attr{
+  text-align:center;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--faint);
+  margin-top:30px;
+}
+
+/* caveat */
+.caveat{
+  border:1px dashed var(--line);padding:26px 30px;
+  background:rgba(255,255,255,.01);
+}
+.caveat .h{font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:12px}
+.caveat p{font-size:.92rem;color:var(--dim);line-height:1.66}
+.caveat p+p{margin-top:.7em}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.foot{
+  border-top:1px solid var(--gold-line);
+  background:var(--ink-1);padding:clamp(54px,8vh,90px) 0 44px;
+}
+.foot__cite{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:clamp(1.15rem,2.2vw,1.5rem);color:var(--paper);
+  line-height:1.5;max-width:780px;
+}
+.foot__cite b{font-style:normal;font-weight:500}
+.foot__grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:28px;
+  margin-top:46px;padding-top:34px;border-top:1px solid var(--line);
+}
+.foot__col .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.foot__col p,.foot__col a{font-size:.9rem;color:var(--dim);line-height:1.7;
+  text-decoration:none;display:block}
+.foot__col a:hover{color:var(--gold-bright)}
+.foot__bottom{
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;
+  margin-top:42px;padding-top:24px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:10px;letter-spacing:.08em;
+  color:var(--faint);
+}
+.totop{color:var(--dim);text-decoration:none;cursor:pointer}
+.totop:hover{color:var(--gold-bright)}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:1080px){
+  .params-key{grid-template-columns:repeat(2,1fr)}
+  .params-rest{grid-template-columns:repeat(3,1fr)}
+  .roadmap{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:860px){
+  body{font-size:17px}
+  .nav{display:none}
+  .puzzle-twin{grid-template-columns:1fr}
+  .mech__split,.mech__choice{grid-template-columns:1fr}
+  .statgrid.c3,.statgrid.c4{grid-template-columns:1fr 1fr}
+  .props{grid-template-columns:1fr}
+  .bsim{grid-template-columns:1fr}
+  .takeaways{grid-template-columns:1fr}
+  .foot__grid{grid-template-columns:1fr 1fr}
+  .verdict{grid-template-columns:1fr}
+  .party-split{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .statgrid.c3,.statgrid.c4,.params-key,.params-rest,.roadmap{grid-template-columns:1fr}
+  .hero__chips .chip{flex:1;min-width:120px}
+  .foot__grid{grid-template-columns:1fr}
+  .dropcap::first-letter{font-size:3.8rem}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001s!important;transition-duration:.001s!important}
+  [data-reveal]{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+</style>
+<noscript><style>[data-reveal]{opacity:1!important;transform:none!important}</style></noscript>
+</head>
+<body>
+<svg class="grain" xmlns="http://www.w3.org/2000/svg"><filter id="grainf"><feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#grainf)"/></svg>
+<div class="vignette"></div>
+<div class="progress"><div class="progress__bar" id="progbar"></div></div>
+
+<!-- ============ MASTHEAD ============ -->
+<header class="masthead" id="masthead">
+  <a class="brand" href="#top">
+    <span class="brand__mark">
+      <svg viewBox="0 0 32 32"><path d="M16 4 L27 16 L16 28 L5 16 Z" fill="none" stroke="#d4ac57" stroke-width="1.6"/><circle cx="16" cy="16" r="3.4" fill="#e4694b"/></svg>
+    </span>
+    <span class="brand__txt">Working Paper · 2026<b>VC &amp; the Decline of IPOs</b></span>
+  </a>
+  <nav class="nav" id="nav">
+    <a href="#decline"><span class="nav__num">01</span>Decline</a>
+    <a href="#puzzle"><span class="nav__num">02</span>Puzzle</a>
+    <a href="#model"><span class="nav__num">03</span>Model</a>
+    <a href="#evidence"><span class="nav__num">04</span>Evidence</a>
+    <a href="#estimates"><span class="nav__num">05</span>Estimates</a>
+    <a href="#counterfactuals"><span class="nav__num">06</span>Counterfactuals</a>
+    <a href="#heterogeneity"><span class="nav__num">07</span>Heterogeneity</a>
+    <a href="#closing"><span class="nav__num">08</span>Implications</a>
+  </nav>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="hero__bg">
+    <div class="hero__glow"></div>
+    <svg class="hero__curve" viewBox="0 0 1440 860" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="curveFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#d4ac57" stop-opacity="0.13"/>
+          <stop offset="1" stop-color="#d4ac57" stop-opacity="0"/>
+        </linearGradient>
+        <pattern id="ledger" width="46" height="46" patternUnits="userSpaceOnUse">
+          <circle cx="1" cy="1" r="1" fill="#efe7d6" fill-opacity="0.05"/>
+        </pattern>
+      </defs>
+      <rect width="1440" height="860" fill="url(#ledger)"/>
+      <path id="heroArea" d="M-40,210 C 240,236 380,250 560,340 C 760,440 980,560 1180,612 C 1300,642 1420,654 1500,660 L1500,880 L-40,880 Z" fill="url(#curveFill)" opacity="0"/>
+      <path id="heroLine" d="M-40,210 C 240,236 380,250 560,340 C 760,440 980,560 1180,612 C 1300,642 1420,654 1500,660" fill="none" stroke="#d4ac57" stroke-width="1.4" stroke-opacity="0.55"/>
+      <g id="heroPt1" opacity="0">
+        <circle cx="120" cy="218" r="3.5" fill="#ecca80"/>
+        <circle cx="120" cy="218" r="9" fill="none" stroke="#d4ac57" stroke-opacity="0.4"/>
+        <text x="138" y="208" fill="#d4ac57" font-size="12" letter-spacing="1.5">1996 · 7,322 LISTED FIRMS</text>
+      </g>
+      <g id="heroPt2" opacity="0">
+        <circle cx="1240" cy="623" r="3.5" fill="#e4694b"/>
+        <circle cx="1240" cy="623" r="9" fill="none" stroke="#e4694b" stroke-opacity="0.45"/>
+        <text x="1224" y="652" fill="#e4694b" font-size="12" letter-spacing="1.5" text-anchor="end">2024 · 3,671</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero__inner">
+    <div class="kicker reveal-load d1">Structural Corporate Finance · Working Paper · April 2026</div>
+
+    <h1 class="hero__title">
+      <span class="line"><span class="reveal-load d2">Venture Capital &amp;</span></span>
+      <span class="line"><span class="reveal-load d3">the <em>Decline</em> of IPOs</span></span>
+    </h1>
+
+    <div class="hero__rule"></div>
+
+    <div class="hero__meta reveal-load d4">
+      <div class="hero__byline">Jae Yung Kim<span>University of Exeter Business School</span></div>
+      <p class="hero__dek">Venture-backed and independent firms abandon their IPOs at the <b>same rate</b> — yet venture-backed withdrawals are <b>twice as likely</b> to create value. This is the story of who decides, and why.</p>
+    </div>
+
+    <div class="hero__chips reveal-load d6">
+      <div class="chip"><b>592</b><span>IPO filings, 1996–2015</span></div>
+      <div class="chip"><b>2.2&times;</b><span>Withdrawal quality gap</span></div>
+      <div class="chip"><b>+1.121</b><span>Causal IV interaction</span></div>
+      <div class="chip"><b>&minus;12pp</b><span>Completion lost without B</span></div>
+    </div>
+  </div>
+
+  <div class="scrollcue reveal-load d8">
+    <span>Begin</span>
+    <span class="bar"></span>
+  </div>
+</section>
+<!-- ============ ABSTRACT ============ -->
+<section class="band" id="abstract">
+  <div class="wrap">
+    <div class="abstract-panel" data-reveal>
+      <span class="label">Abstract</span>
+      <p class="abstract-text">
+        We develop a continuous-time model of IPO filing outcomes in which venture capitalists and entrepreneurs <b>disagree over IPO versus M&amp;A</b>. The model's two withdrawal channels — distress and strategic M&amp;A — generate <b>equal withdrawal rates</b> across VC and non-VC firms but a <b>quality gap</b>, with VC withdrawals twice as likely to earn positive risk-adjusted returns. We estimate via simulated method of moments with indirect inference, embedding IV coefficients as targeted moments. Counterfactuals identify the entrepreneurial private benefit as the <b>dominant IPO-sustaining force</b>.
+      </p>
+      <div class="meta-row">
+        <div class="meta-block">
+          <div class="k">JEL Classification</div>
+          <div class="v">
+            <span class="tagpill jel">G24</span>
+            <span class="tagpill jel">G34</span>
+            <span class="tagpill jel">L26</span>
+          </div>
+        </div>
+        <div class="meta-block">
+          <div class="k">Keywords</div>
+          <div class="v">
+            <span class="tagpill">IPO withdrawal</span>
+            <span class="tagpill">venture capital</span>
+            <span class="tagpill">control rights</span>
+            <span class="tagpill">M&amp;A</span>
+            <span class="tagpill">structural estimation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="roadmap" data-reveal>
+      <div class="roadmap__step">
+        <div class="n">→ 01</div>
+        <h4>The Decline</h4>
+        <p>U.S. public firms halved in three decades; VCs now back most filings.</p>
+      </div>
+      <div class="roadmap__step">
+        <div class="n">→ 02</div>
+        <h4>The Puzzle</h4>
+        <p>Equal withdrawal rates, but VC exits are far higher quality.</p>
+      </div>
+      <div class="roadmap__step">
+        <div class="n">→ 03</div>
+        <h4>The Model</h4>
+        <p>Two withdrawal channels and a contest over control.</p>
+      </div>
+      <div class="roadmap__step">
+        <div class="n">→ 04–05</div>
+        <h4>Estimation</h4>
+        <p>Causal IV evidence embedded inside a structural fit.</p>
+      </div>
+      <div class="roadmap__step">
+        <div class="n">→ 06–08</div>
+        <h4>What Drives It</h4>
+        <p>Counterfactuals isolate the forces holding the IPO open.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============ 01 · THE DECLINE ============ -->
+<section class="band band--raised scroll-anchor" id="decline">
+  <span class="sec-mark">01</span>
+  <div class="wrap">
+    <div class="col" data-reveal>
+      <div class="eyebrow"><span class="no">§ 01</span> The Vanishing Public Company</div>
+      <h2 class="head">A market that <em>halved</em> itself</h2>
+      <p class="lead">In 1996 there were 7,322 domestic firms listed on U.S. stock exchanges. By 2024 the count had fallen to roughly 3,671 — a market that quietly halved itself over a single generation.</p>
+    </div>
+
+    <div class="col prose dropcap" data-reveal style="margin-top:34px">
+      <p>The contraction is not subtle. Annual operating-company IPOs averaged just <b>113 per year</b> from 2001 to 2025, against more than <b>300 per year</b> before 2001. Filing volume fell 73% — from an average of 347 a year to 93. And as the pipeline narrowed, its composition shifted: venture-capital-backed firms now account for <b>over 60%</b> of filings, up from 36% in the early 1990s.</p>
+      <p>A substantial literature has tried to explain the disappearance. Some point to changing economies of scope that make listing less valuable for small firms; others to a persistent "U.S. listing gap" and the declining net benefits of public status. Regulatory cost — the compliance burden of Sarbanes-Oxley — is the popular culprit, yet recent evidence puts its share of the decline at roughly 7%. On the supply side, the deregulation of private capital after 1996 let firms raise late-stage money and simply stay private longer.</p>
+      <p>These accounts identify aggregate forces. But a central question stays open: <em>through what economic mechanism does venture capital itself reshape the IPO landscape?</em> This paper answers it by treating IPO filing outcomes as a laboratory.</p>
+    </div>
+
+    <figure class="chart-frame" data-reveal style="margin-top:54px">
+      <div class="chart-title">Fig. 01 — The disappearing listed firm</div>
+      <div class="chart-sub">Domestic operating companies listed on U.S. exchanges, anchored at the two reported endpoints.</div>
+      <div id="declineChart"></div>
+      <figcaption class="figcap">
+        <span class="tag">FIG. 01</span>
+        <span>The curve interpolates between two reported counts — <b>7,322 firms in 1996</b> and <b>3,671 in 2024</b>. The decline coincided with a 73% collapse in annual filing volume and a steady rise in the venture-capital share of the surviving pipeline.</span>
+      </figcaption>
+    </figure>
+
+    <div class="statgrid c4" data-reveal style="margin-top:1px">
+      <div class="statcell">
+        <div class="big" data-count data-to="347" data-suffix="">0</div>
+        <div class="sub">avg. annual IPO filings <b>before 2001</b></div>
+        <div class="tick">The boom era</div>
+      </div>
+      <div class="statcell">
+        <div class="big" data-count data-to="93">0</div>
+        <div class="sub">avg. annual IPO filings <b>since 2001</b></div>
+        <div class="tick">A 73% collapse</div>
+      </div>
+      <div class="statcell">
+        <div class="big" data-count data-to="36" data-suffix="%">0</div>
+        <div class="sub">VC share of filings, <b>early 1990s</b></div>
+        <div class="tick">Composition shift</div>
+      </div>
+      <div class="statcell">
+        <div class="big" data-count data-to="60" data-prefix="&gt;" data-suffix="%">0</div>
+        <div class="sub">VC share of filings, <b>recent years</b></div>
+        <div class="tick">VCs now dominate</div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============ 02 · THE PUZZLE ============ -->
+<section class="band scroll-anchor" id="puzzle">
+  <span class="sec-mark">02</span>
+  <div class="wrap">
+    <div class="col" data-reveal>
+      <div class="eyebrow"><span class="no">§ 02</span> A Puzzle in the Withdrawal Data</div>
+      <h2 class="head">Equal rates.<br><em>Unequal</em> ends.</h2>
+      <p class="lead">When a firm files an IPO registration statement, it has revealed its intent to go public. What happens next — completion or withdrawal — exposes the forces that decide whether intent becomes reality.</p>
+    </div>
+
+    <div class="col prose" data-reveal style="margin-top:30px">
+      <p>Roughly 16% of filers withdraw, most often exiting instead through M&amp;A. We study a sample of <b>592 IPO filings from 1996–2015</b>, holding the terminal event constant — every firm is eventually acquired — so the comparison isolates the <em>path taken</em>, not the destination. Conditioning on the filing decision also disarms the usual selection worry: every firm in the sample has already revealed a taste for public listing.</p>
+      <p>Returns are measured by the <span class="vc">Generalized Public Market Equivalent</span> (GPME), which discounts each deal's terminal payoff with a stochastic discount factor estimated from public markets — so a measured quality gap reflects genuine value, not assumed risk. And the data deliver something strange.</p>
+    </div>
+
+    <div class="puzzle-twin" data-reveal style="margin-top:48px">
+      <div class="ptile vc">
+        <div class="who">◆ Venture-backed</div>
+        <div class="whon">328 firms · 54 withdrawals</div>
+        <div class="prow"><span class="pl">Withdrawal rate</span><span class="pv" data-count data-to="16.5" data-dec="1" data-suffix="%">0</span></div>
+        <div class="prow"><span class="pl">Positive-GPME withdrawals</span><span class="pv" data-count data-to="27.8" data-dec="1" data-suffix="%">0</span></div>
+        <div class="prow"><span class="pl">Mean GPME, withdrawn</span><span class="pv" data-count data-to="-0.241" data-dec="3">0</span></div>
+      </div>
+      <div class="ptile nv">
+        <div class="who">◆ Non-VC</div>
+        <div class="whon">264 firms · 40 withdrawals</div>
+        <div class="prow"><span class="pl">Withdrawal rate</span><span class="pv" data-count data-to="15.2" data-dec="1" data-suffix="%">0</span></div>
+        <div class="prow"><span class="pl">Positive-GPME withdrawals</span><span class="pv" data-count data-to="12.5" data-dec="1" data-suffix="%">0</span></div>
+        <div class="prow"><span class="pl">Mean GPME, withdrawn</span><span class="pv" data-count data-to="-0.458" data-dec="3">0</span></div>
+      </div>
+    </div>
+
+    <div class="verdict" data-reveal style="margin-top:1px">
+      <div class="v eq">
+        <div class="t">◆ Fact 2 — the rates</div>
+        <div class="d">16.5% vs. 15.2%</div>
+        <p>VC-backed and non-VC firms withdraw at <b style="color:var(--nonvc-soft)">nearly identical rates</b> — a gap of just 1.3 points. If VC backing signalled higher quality, they would withdraw <em>less</em>. It does not.</p>
+      </div>
+      <div class="v gap">
+        <div class="t">◆ Fact 3 — the quality</div>
+        <div class="d">27.8% vs. 12.5%</div>
+        <p>Yet VC-backed withdrawals are <b style="color:var(--vc-soft)">2.2&times; as likely</b> to earn a positive risk-adjusted return. Same rate of failure to list — wildly different consequences.</p>
+      </div>
+    </div>
+
+    <figure class="chart-frame" data-reveal style="margin-top:46px">
+      <div class="chart-title">Fig. 02 — The same door, different rooms</div>
+      <div class="chart-sub">Withdrawal rate and withdrawal quality, by venture-capital status.</div>
+      <div id="puzzleBars"></div>
+      <div class="legend">
+        <div class="it"><span class="sw vc"></span>VC-backed</div>
+        <div class="it"><span class="sw nv"></span>Non-VC</div>
+      </div>
+      <figcaption class="figcap">
+        <span class="tag">FIG. 02</span>
+        <span>Two pairs of bars. On the left, withdrawal rates sit almost flush. On the right, the quality of those withdrawals splits apart. <b>The puzzle is the contrast between the two pairs.</b></span>
+      </figcaption>
+    </figure>
+
+    <figure class="chart-frame" data-reveal style="margin-top:38px">
+      <div class="chart-title">Fig. 03 — Two distributions of withdrawal returns</div>
+      <div class="chart-sub">Risk-adjusted return (normalized GPME) among withdrawn filers. The venture-backed distribution carries a right tail the other lacks.</div>
+      <div id="distChart"></div>
+      <div class="legend">
+        <div class="it"><span class="sw vc"></span>VC-backed withdrawals · mean &minus;0.241</div>
+        <div class="it"><span class="sw nv"></span>Non-VC withdrawals · mean &minus;0.458</div>
+      </div>
+      <figcaption class="figcap">
+        <span class="tag">FIG. 03</span>
+        <span>Schematic density curves; the shaded regions right of zero carry the <b>27.8%</b> and <b>12.5%</b> positive-GPME shares reported in the paper. The VC distribution's pronounced right tail is the visible signature of the quality gap.</span>
+      </figcaption>
+    </figure>
+
+    <div class="col" data-reveal style="margin-top:52px">
+      <div class="aside">
+        <div class="h">◆ The tell — it vanishes among completers</div>
+        <p>If venture-backed firms were simply better, the advantage would appear everywhere. It does not. Among firms that <em>completed</em> their IPO, the VC quality edge disappears entirely — <b>22.6%</b> positive-GPME for VC-backed versus <b>22.3%</b> for non-VC, a gap of 1.0&times;. The asymmetry lives only in the withdrawal channel. Whatever produces it must operate through the <em>decision to withdraw</em> — not through general firm quality.</p>
+      </div>
+    </div>
+
+    <div class="col prose" data-reveal style="margin-top:40px">
+      <p>The four facts together box in any explanation. <b>Fact 1:</b> most filers complete, a sizeable minority withdraws. <b>Fact 2:</b> the rate of withdrawal is the same across VC status. <b>Fact 3:</b> the quality of withdrawal is not. <b>Fact 4:</b> withdrawals cluster in cold markets — <span class="nv">23.6%</span> withdraw in cold periods against <span class="vc">8.1%</span> in hot ones.</p>
+      <p>If every withdrawal were failure, both groups would show uniformly negative returns. If VC firms were simply higher quality, they would withdraw <em>less</em>. The pattern instead demands a framework where both groups face the <em>same types of shocks</em> — preserving rate equality — but make <em>different decisions</em> conditional on those shocks. That is exactly what the model supplies.</p>
+    </div>
+  </div>
+</section>
+<!-- ============ 03 · THE MODEL ============ -->
+<section class="band band--raised scroll-anchor" id="model">
+  <span class="sec-mark">03</span>
+  <div class="wrap">
+    <div class="col" data-reveal>
+      <div class="eyebrow"><span class="no">§ 03</span> A Continuous-Time Model of Filing Outcomes</div>
+      <h2 class="head">Two channels, <em>one</em> contested decision</h2>
+      <p class="lead">A firm has already filed for an IPO. At every instant, the party in control may complete the offering, withdraw it for an M&amp;A exit, or wait. Firm value drifts as a geometric Brownian motion; the market cycles between hot and cold; and control itself is contractual.</p>
+    </div>
+
+    <div class="col prose" data-reveal style="margin-top:30px">
+      <p>The model's engine is a <em>contest of preferences</em>. The entrepreneur draws a <span class="vc">private benefit</span> <em>B</em> from going public — the value of being CEO of a listed company, of liquidity, of prestige. The venture capitalist does not. That single wedge means the two parties rank IPO and M&amp;A differently, and the contract that allocates control between them decides which ranking prevails.</p>
+    </div>
+
+    <div class="eqn" data-reveal>
+      <div class="formula">d<em>V</em><sub>t</sub> / <em>V</em><sub>t</sub> &nbsp;<span class="op">=</span>&nbsp; &mu;<sub>c</sub> d<em>t</em> &nbsp;<span class="op">+</span>&nbsp; &sigma; d<em>W</em><sub>t</sub>,&emsp; &mu;<sub>c</sub> <span class="op">=</span> &mu; <span class="op">&minus;</span> &delta; &nbsp;<span class="op">or</span>&nbsp; &mu; <span class="op">+</span> <span class="vc">&alpha;</span> <span class="op">&minus;</span> &delta;</div>
+      <div class="num">(1)</div>
+      <div class="note">Firm value diffuses faster under VC control — the value-added drift &alpha; applies when V ≤ V*.</div>
+    </div>
+
+    <h3 style="font-family:var(--display);font-weight:450;font-size:1.5rem;color:var(--paper);margin:50px 0 8px" data-reveal>The two-channel withdrawal mechanism</h3>
+    <p class="col prose" data-reveal style="margin-bottom:28px">At every instant the controlling party weighs three actions — <b>complete the IPO</b>, <b>withdraw to M&amp;A</b>, or <b>wait</b>. Completion is the modal outcome; the model's real subject is the <em>withdrawal</em>, which arrives through two doors with very different economics. One is symmetric across VC status; the other is not. Together they reconcile equal rates with unequal quality.</p>
+
+    <figure data-reveal>
+      <div class="mech">
+        <div class="mech__file">
+          <div class="t">◆ The firm is live</div>
+          <div class="s">A firm files its S-1 registration statement</div>
+        </div>
+        <div class="mech__decision">
+          <div class="mech__decision-h">◆ At every instant, the controlling party chooses one of three actions</div>
+          <div class="mech__choice">
+            <div class="choice choice--complete">
+              <div class="choice__tag">Option I · success path</div>
+              <h5>Complete the IPO</h5>
+              <p>The firm goes public — the modal outcome, taken by ~84% of filers in the data.</p>
+              <div class="choice__pay">V·&phi;<sub>c</sub>(s) &minus; c<sub>c</sub> <span class="plusB">+ B</span></div>
+              <div class="choice__note">the private benefit B accrues only when the founder controls</div>
+            </div>
+            <div class="choice choice--withdraw">
+              <div class="choice__tag">Option II · the deviation</div>
+              <h5>Withdraw &rarr; M&amp;A</h5>
+              <p>The firm pulls its filing and exits by trade sale — the outcome this paper dissects.</p>
+              <div class="choice__pay">M<sub>t</sub> &minus; c<sub>w</sub></div>
+              <div class="choice__note">a withdrawal can arrive through two distinct channels &darr;</div>
+            </div>
+            <div class="choice choice--wait">
+              <div class="choice__tag">Option III · not yet</div>
+              <h5>Wait</h5>
+              <p>Keep the filing open and continue. Firm value keeps diffusing; the option stays alive.</p>
+              <div class="choice__pay">continuation value&ensp;J</div>
+              <div class="choice__note">at the deadline T = 7 yrs, waiting ends — the firm must complete or withdraw</div>
+            </div>
+          </div>
+        </div>
+        <div class="mech__bridge">
+          <span class="a">&#9662;</span>
+          <span class="lbl"><b>Option II decomposed</b> — a withdrawal arrives through one of two channels</span>
+        </div>
+        <div class="mech__split">
+          <div class="channel channel--distress">
+            <div class="ch-tag">Channel I — involuntary</div>
+            <h4>Distress shock</h4>
+            <p>Exogenous adverse shocks arrive as a Poisson process. When one hits, the firm is <em>forced</em> to withdraw — regardless of who holds control. The shock rate and payoff are <b>identical for VC-backed and non-VC firms</b>.</p>
+            <p style="margin-top:10px;color:var(--dim)">This channel pins the withdrawal <em>rate</em>: it sets a common floor neither group can fall below. Distress exits are low quality.</p>
+            <div class="rate">arrival rate&ensp;&lambda;<sub>dist</sub>&ensp;·&ensp;symmetric</div>
+          </div>
+          <div class="channel channel--strategic">
+            <div class="ch-tag">Channel II — voluntary</div>
+            <h4>Strategic M&amp;A offer</h4>
+            <p>Acquisition offers arrive stochastically. The controlling party accepts only if the net offer beats the continuation value — and here the two parties part ways.</p>
+            <div class="party-split">
+              <div class="party vc">
+                <div class="pn">VC controls</div>
+                <div class="pd">Higher offers (synergy premium &eta;) and a lower bar — no private benefit B to forgo.</div>
+                <div class="out">→ accepts more, and better</div>
+              </div>
+              <div class="party nv">
+                <div class="pn">Founder controls</div>
+                <div class="pd">Anchored by B, the founder rejects offers the VC would take.</div>
+                <div class="out">→ holds out for the IPO</div>
+              </div>
+            </div>
+            <div class="rate">arrival rate&ensp;&lambda;<sub>ma</sub>&ensp;·&ensp;VC synergy premium&ensp;&eta;<sub>vc</sub></div>
+          </div>
+        </div>
+      </div>
+      <figcaption class="figcap">
+        <span class="tag">FIG. 04</span>
+        <span>Completing the IPO is the modal outcome; this figure traces the alternative. A withdrawal arrives through two channels: the <b>distress channel</b> equalizes withdrawal <b>rates</b> across VC status, while the <b>strategic channel</b> generates the <b>quality gap</b> — VC-backed withdrawals are disproportionately high-value strategic exits rather than low-value distress exits.</span>
+      </figcaption>
+    </figure>
+
+    <div class="eqn" data-reveal style="margin-top:40px">
+      <div class="formula"><em>M</em><sub>t</sub> <span class="op">=</span> <em>V</em><sub>t</sub> · &phi;<sub>w</sub>(<em>s</em>) · exp(<span class="vc">&eta;<sub>vc</sub></span> · <em>D</em><sub>i</sub><sup>vc</sup> <span class="op">+</span> &sigma;<sub>exit</sub> &epsilon;)&emsp;<span class="op">accept iff</span>&emsp;<em>M</em><sub>t</sub> <span class="op">&minus;</span> <em>c</em><sub>w</sub> <span class="op">&gt;</span> <em>J</em><sup>c</sup></div>
+      <div class="num">(2)</div>
+      <div class="note">A VC-backed firm's M&amp;A offer is scaled up by exp(&eta;<sub>vc</sub>); the VC's continuation value J excludes B, so its acceptance set strictly contains the founder's.</div>
+    </div>
+
+    <h3 style="font-family:var(--display);font-weight:450;font-size:1.5rem;color:var(--paper);margin:50px 0 8px" data-reveal>Control is state-contingent</h3>
+    <p class="col prose" data-reveal style="margin-bottom:24px">The VC contract specifies a threshold. While the firm performs well, the founder keeps control and her option to list. Once value slips below V*, control passes to the VC — who can redirect a struggling firm toward the M&amp;A exit the founder, anchored by B, would inefficiently refuse.</p>
+
+    <figure class="vstar" data-reveal>
+      <div class="vstar__bar">
+        <div class="vstar__seg vc">
+          <div class="r">◆ V ≤ V* — VC controls</div>
+          <div class="d">drift &mu; + &alpha; &minus; &delta; = 0.213 / yr</div>
+        </div>
+        <div class="vstar__mark"></div>
+        <div class="vstar__seg nv">
+          <div class="r">Founder controls — V &gt; V* ◆</div>
+          <div class="d">drift &mu; &minus; &delta; = 0.040 / yr</div>
+        </div>
+      </div>
+      <div class="vstar__axis"><span>Low firm value</span><span>V* = 0.980 (≈ median firm)</span><span>High firm value</span></div>
+      <figcaption class="figcap" style="margin-top:16px">
+        <span class="tag">FIG. 05</span>
+        <span>The estimated threshold sits at <b>V* = 0.980</b> — almost exactly the median filer. Roughly half of VC-backed firms operate under active VC control at filing; the share evolves as value diffuses. Active VC management lifts the effective drift more than five-fold.</span>
+      </figcaption>
+    </figure>
+
+    <h3 style="font-family:var(--display);font-weight:450;font-size:1.5rem;color:var(--paper);margin:54px 0 22px" data-reveal>Four propositions</h3>
+    <div class="props" data-reveal>
+      <div class="prop">
+        <div class="pno">I</div>
+        <h4>Stay private in cold markets</h4>
+        <p>When IPO valuations are depressed, the completion threshold rises and firms delay. Withdrawals climb through both channels.</p>
+        <div class="ev">→ data: 23.6% cold vs. 8.1% hot withdrawal rate</div>
+      </div>
+      <div class="prop">
+        <div class="pno">II</div>
+        <h4>VC backing &amp; withdrawal quality</h4>
+        <p>Distress equalizes rates; the strategic channel — synergy premium &eta; plus a lower VC reservation value — lifts conditional quality.</p>
+        <div class="ev">→ the central mechanism behind Fact 3</div>
+      </div>
+      <div class="prop">
+        <div class="pno">III</div>
+        <h4>Endogenous control shift</h4>
+        <p>As cold markets grow more prevalent, the optimal threshold V* rises — more firms fall under VC control, and aggregate completion falls endogenously.</p>
+        <div class="ev">→ &part;V* / &part;&pi;<sub>C</sub> &gt; 0</div>
+      </div>
+      <div class="prop">
+        <div class="pno">IV</div>
+        <h4>Heterogeneous effects</h4>
+        <p>The VC quality advantage is sharpest for small firms, for same-industry acquirers, and for filings made in cold markets.</p>
+        <div class="ev">→ tested directly in §07</div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============ 04 · CAUSAL EVIDENCE ============ -->
+<section class="band scroll-anchor" id="evidence">
+  <span class="sec-mark">04</span>
+  <div class="wrap">
+    <div class="col" data-reveal>
+      <div class="eyebrow"><span class="no">§ 04</span> From Correlation to Cause</div>
+      <h2 class="head">Is the gap <em>caused</em> by VC?</h2>
+      <p class="lead">The descriptive puzzle could still be unobserved selection. To rule that out, we instrument the withdrawal decision with forces that move it through market conditions — not firm quality.</p>
+    </div>
+
+    <div class="col prose" data-reveal style="margin-top:30px">
+      <p>Two instruments do the work, both measured over the 60-day post-filing bookbuilding window. The first is the cumulative <span class="nv">NASDAQ return</span>: when markets rise after filing, investor demand strengthens and withdrawal becomes less likely. The second is the average <span class="nv">CBOE VIX</span>: when uncertainty spikes, underwriters pull offerings regardless of firm fundamentals. With their VC interactions, four instruments identify two endogenous variables — <em>Withdrawn</em> and <em>Withdrawn &times; VC</em>.</p>
+      <p>The exclusion restriction is credible because the dependent variable — the normalized GPME — is already measured <em>relative to</em> a stochastic discount factor. A rising market lifts terminal value but simultaneously shrinks the discount factor, leaving the risk-adjusted return roughly untouched. The instruments operate on quality only through the channel of withdrawal itself. A placebo on the non-VC subsample, where the interaction is mechanically zero, finds precisely nothing.</p>
+    </div>
+
+    <figure class="tbl-wrap" data-reveal style="margin-top:46px">
+      <table class="data">
+        <thead>
+          <tr><th>Dependent: normalized GPME</th><th>(1) OLS</th><th>(2) OLS + FE</th><th>(3) 2SLS</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Withdrawn</td><td>&minus;0.305<span class="star">**</span></td><td>&minus;0.386<span class="star">**</span></td><td>&minus;0.594</td></tr>
+          <tr class="sub"><td></td><td>(0.152)</td><td>(0.163)</td><td>(0.605)</td></tr>
+          <tr class="hl"><td>Withdrawn &times; VC</td><td>0.359<span class="star">*</span></td><td>0.386<span class="star">*</span></td><td class="pop">1.121<span class="star">*</span></td></tr>
+          <tr class="sub hl"><td></td><td>(0.205)</td><td>(0.227)</td><td>(0.672)</td></tr>
+          <tr><td>VC-backed</td><td>&minus;0.155<span class="star">*</span></td><td>&minus;0.179<span class="star">*</span></td><td>&minus;0.311</td></tr>
+          <tr class="sub"><td></td><td>(0.084)</td><td>(0.093)</td><td>(0.114)</td></tr>
+          <tr><td>Observations</td><td>592</td><td>592</td><td>592</td></tr>
+          <tr><td>First-stage F · Withdrawn</td><td>—</td><td>—</td><td>16.8</td></tr>
+          <tr><td>First-stage F · Wd &times; VC</td><td>—</td><td>—</td><td>19.2</td></tr>
+          <tr><td>Overidentification p-value</td><td>—</td><td>—</td><td>0.723</td></tr>
+          <tr><td>Year &amp; industry FE · controls</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+        </tbody>
+      </table>
+    </figure>
+    <p class="figcap" style="margin-top:16px;max-width:880px">
+      <span class="tag">TABLE 01</span>
+      <span>Robust standard errors in parentheses. <b>*** p&lt;0.01 · ** p&lt;0.05 · * p&lt;0.10.</b> First-stage F-statistics comfortably clear the weak-instrument threshold of 10; the overidentification test does not reject instrument validity.</span>
+    </p>
+
+    <div class="col" data-reveal style="margin-top:46px">
+      <div class="aside">
+        <div class="h">◆ The headline coefficient</div>
+        <p>Under 2SLS with year and industry fixed effects, the interaction <em>Withdrawn &times; VC</em> is <b style="color:var(--gold-bright);font-size:1.15em">+1.121</b> — significant at the 10% level, roughly three times the OLS estimate. Under a differential-beta benchmark specification it strengthens to <b>+1.461</b> and crosses the 5% threshold. The VC withdrawal premium is causal — and this number does not stay a robustness check. It becomes a <em>targeted moment</em> inside the structural estimation, forcing the model to reproduce not just the patterns but the mechanism.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PULL QUOTE ============ -->
+<section class="band band--raised">
+  <div class="wrap">
+    <p class="pull" data-reveal>
+      <span class="mk">“</span>Standard estimation cannot tell a model that explains the gap by <em>selection</em> from one that explains it by <em>mechanism</em>. Matching the causal coefficient as a moment forces the distinction.<span class="mk">”</span>
+    </p>
+    <div class="pull-attr" data-reveal>Indirect inference · the bridge from reduced form to structure</div>
+  </div>
+</section>
+<!-- ============ 05 · STRUCTURAL ESTIMATES ============ -->
+<section class="band scroll-anchor" id="estimates">
+  <span class="sec-mark">05</span>
+  <div class="wrap">
+    <div class="col" data-reveal>
+      <div class="eyebrow"><span class="no">§ 05</span> Simulated Method of Moments</div>
+      <h2 class="head">What the data <em>say</em> the model is</h2>
+      <p class="lead">Nine free parameters, twelve moment conditions, three degrees of overidentification. The estimator minimizes the weighted distance between simulated and empirical moments — and one of those moments is the causal IV coefficient itself.</p>
+    </div>
+
+    <div class="col prose" data-reveal style="margin-top:30px">
+      <p>For every candidate parameter vector, the model's HJB system is solved, 200,000 firm paths are simulated, and twelve moments are computed: withdrawal rates, the VC quality differential, withdrawal and post-IPO timing, a within-VC size gradient, the dispersion of VC-withdrawal returns — and the 2SLS interaction coefficient. The remaining 20 parameters are calibrated from market data and held fixed. Four estimates carry the argument.</p>
+    </div>
+
+    <div class="params-key" data-reveal style="margin-top:46px">
+      <div class="pcard">
+        <div class="sym">&alpha;</div>
+        <div class="pname">VC value-added</div>
+        <div class="pest" data-count data-to="0.173" data-dec="3">0</div>
+        <div class="pstat">SE 0.070&ensp;·&ensp;t = 2.46<span class="star">**</span></div>
+        <div class="pdesc">Firms under active VC control appreciate <b>17.3% faster</b> per year — the force that keeps struggling firms out of distress.</div>
+      </div>
+      <div class="pcard">
+        <div class="sym">B</div>
+        <div class="pname">Private benefit of IPO</div>
+        <div class="pest" data-count data-to="0.267" data-dec="3">0</div>
+        <div class="pstat">SE 0.075&ensp;·&ensp;t = 3.55<span class="star">***</span></div>
+        <div class="pdesc">The non-monetary value of listing — status, liquidity, prestige — worth <b>26.7% of firm value</b> to the founder.</div>
+      </div>
+      <div class="pcard">
+        <div class="sym">&eta;<sub style="font-size:.5em">vc</sub></div>
+        <div class="pname">VC M&amp;A synergy premium</div>
+        <div class="pest" data-count data-to="0.242" data-dec="3">0</div>
+        <div class="pstat">SE 0.018&ensp;·&ensp;t = 13.44<span class="star">***</span></div>
+        <div class="pdesc">VC-backed firms draw M&amp;A offers averaging <b>39% higher</b> than comparable non-VC firms.</div>
+      </div>
+      <div class="pcard">
+        <div class="sym">&sigma;<sub style="font-size:.5em">&eta;</sub></div>
+        <div class="pname">Synergy premium dispersion</div>
+        <div class="pest" data-count data-to="0.415" data-dec="3">0</div>
+        <div class="pstat">SE 0.109&ensp;·&ensp;t = 3.80<span class="star">***</span></div>
+        <div class="pdesc">Cross-firm spread in VC networks — a top-quartile firm earns a <b>68% premium</b>, a bottom-quartile firm almost none.</div>
+      </div>
+    </div>
+
+    <div class="params-rest" data-reveal>
+      <div class="prest"><div class="sym">&phi;<sub style="font-size:.6em">c</sub><sup style="font-size:.6em">C</sup></div><div class="est">0.519</div><div class="nm">Cold-market IPO multiplier · 39% discount</div></div>
+      <div class="prest"><div class="sym">&lambda;<sub style="font-size:.6em">dist</sub></div><div class="est">0.013</div><div class="nm">Distress shock rate · symmetric</div></div>
+      <div class="prest"><div class="sym">&delta;</div><div class="est">0.030</div><div class="nm">Convenience yield · value decay/yr</div></div>
+      <div class="prest"><div class="sym">&lambda;<sub style="font-size:.6em">MA</sub></div><div class="est">0.186</div><div class="nm">Post-IPO M&amp;A arrival rate</div></div>
+      <div class="prest"><div class="sym">V*</div><div class="est">0.980</div><div class="nm">VC control threshold</div></div>
+    </div>
+    <p class="figcap" style="margin-top:16px;max-width:880px">
+      <span class="tag">TABLE 02</span>
+      <span>All nine free parameters are significant at the 5% level; eight at the 1% level. Standard errors are sandwich-form, with a cluster-bootstrapped data-moment covariance. <b>*** p&lt;0.01 · ** p&lt;0.05.</b></span>
+    </p>
+
+    <div class="col prose" data-reveal style="margin-top:50px">
+      <h3 style="font-family:var(--display);font-weight:450;font-size:1.5rem;color:var(--paper);margin-bottom:14px">Does the model fit?</h3>
+      <p>A structural model is only as credible as its moments. The estimated model matches the headline causal coefficient almost exactly — <b>+1.033</b> simulated against <b>+1.121</b> in the data, within one cluster-robust standard error — and tracks the VC-side quality and timing moments tightly. It is honest about its misses too: it overstates the VC share among withdrawals and pushes the quality ratio above the data's.</p>
+    </div>
+
+    <figure class="chart-frame" data-reveal style="margin-top:32px">
+      <div class="chart-title">Fig. 06 — Moment fit: data vs. model</div>
+      <div class="chart-sub">Each row is one targeted moment. Distance between the two marks is the fit.</div>
+      <div id="momentChart"></div>
+      <div class="legend">
+        <div class="it"><span class="sw gd"></span>Data moment</div>
+        <div class="it"><span class="sw ring"></span>Model (simulated)</div>
+      </div>
+      <figcaption class="figcap">
+        <span class="tag">FIG. 06</span>
+        <span>Twelve moments, each on its own scale. The IV interaction row — the bridge from §04 — closes to within a standard error. <b>The model reproduces not just the patterns but the causal mechanism.</b></span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+<!-- ============ 06 · COUNTERFACTUALS ============ -->
+<section class="band band--raised scroll-anchor" id="counterfactuals">
+  <span class="sec-mark">06</span>
+  <div class="wrap">
+    <div class="col" data-reveal>
+      <div class="eyebrow"><span class="no">§ 06</span> What Holds the IPO Open</div>
+      <h2 class="head">Remove one force <em>at a time</em></h2>
+      <p class="lead">With the model estimated, each structural feature can be switched off in isolation. The exercise reveals which force actually sustains the public-listing decision — and the answer is not the one policy usually targets.</p>
+    </div>
+
+    <figure class="chart-frame" data-reveal style="margin-top:44px">
+      <div class="chart-title">Fig. 07 — Counterfactual effect on IPO completion</div>
+      <div class="chart-sub">Change in completion rate (percentage points) when each feature is removed, with 5–95% bootstrap bands.</div>
+      <div id="cfChart"></div>
+      <figcaption class="figcap">
+        <span class="tag">FIG. 07</span>
+        <span>All figures are model-simulated; the structural baseline completion of 89.6% runs above the raw-sample rate. Removing the entrepreneurial private benefit B cuts completion by <b>12.1 points</b> — roughly 4.5&times; the effect of removing VC value-added &alpha;, and the two confidence bands do not overlap. <b>B is the dominant IPO-sustaining force.</b></span>
+      </figcaption>
+    </figure>
+
+    <div class="col prose" data-reveal style="margin-top:48px">
+      <h3 style="font-family:var(--display);font-weight:450;font-size:1.6rem;color:var(--paper);margin-bottom:14px">The dual role of venture capital</h3>
+      <p>The counterfactuals expose a two-sided story. VC value-added <em>creates</em> — without the &alpha; drift, more firms decay into distress and 2.7 points of completions vanish. But the synergy premium <em>redirects</em> — switch off &eta; and the VC withdrawal quality advantage collapses from a 4.7&times; ratio to 1.3&times;, while completion barely moves. VCs simultaneously hold firms together and steer the best of them quietly into M&amp;A.</p>
+      <p>And presiding over all of it is the founder's private benefit. Remove B and completion falls off a cliff — the single largest effect in the model. The implication is pointed: if the secular IPO decline reflects an <em>erosion of B</em> — private secondary markets supplying liquidity, late-stage venture capital supplying prestige and capital — then the decline is, at heart, a story of weakening entrepreneurial incentives to go public.</p>
+    </div>
+
+    <div class="takeaways" data-reveal style="margin-top:40px">
+      <div class="tk">
+        <div class="ti">&alpha;</div>
+        <h4>Creates value</h4>
+        <p>VC management sustains +2.7pp of completions that would otherwise decay into distress.</p>
+      </div>
+      <div class="tk">
+        <div class="ti">&eta;</div>
+        <h4>Redirects value</h4>
+        <p>The synergy premium is the entire quality gap — remove it and 4.7&times; collapses to 1.3&times;.</p>
+      </div>
+      <div class="tk">
+        <div class="ti">B</div>
+        <h4>Sustains the IPO</h4>
+        <p>The founder's private benefit holds the listing decision open — &minus;12pp without it.</p>
+      </div>
+    </div>
+
+    <div class="col" data-reveal style="margin-top:60px">
+      <div class="eyebrow"><span class="no">interactive</span> The Shape of the Private Benefit</div>
+      <h3 style="font-family:var(--display);font-weight:460;font-size:1.85rem;color:var(--paper);margin-bottom:10px">An S-curve, not a slope</h3>
+      <p class="prose" style="margin-bottom:8px">Completion does not respond to B linearly. Drag the private benefit and watch where the curve bites — the steep stretch sits right around the estimated value, so small erosions there produce outsized losses.</p>
+    </div>
+
+    <figure class="bsim" data-reveal style="margin-top:26px">
+      <div class="bsim__plot">
+        <div class="chart-title" style="margin-bottom:20px">Fig. 08 — Completion vs. private benefit B</div>
+        <div id="bCurve"></div>
+      </div>
+      <div class="bsim__panel">
+        <div class="bsim__lbl">Predicted IPO completion</div>
+        <div class="bsim__read"><span id="bRead">89.5</span><small>%</small></div>
+        <div style="margin-top:26px">
+          <div class="bsim__lbl">Private benefit · B</div>
+          <div class="bsim__bval" id="bVal">0.267</div>
+          <input type="range" class="slider" id="bSlider" min="0" max="0.5" step="0.001" value="0.267" aria-label="Private benefit B">
+          <div class="slider__scale"><span>0.00</span><span>0.25</span><span>0.50</span></div>
+        </div>
+        <p class="bsim__hint" id="bHint">At the estimated B = 0.267, the curve has nearly flattened — but just below it lies the steep descent.</p>
+      </div>
+    </figure>
+    <p class="figcap" style="margin-top:16px;max-width:880px">
+      <span class="tag">FIG. 08</span>
+      <span>The curve passes through the paper's reported anchors — 77.5% at B = 0, 85.1% at B = 0.20, 89.5% at the estimate, flattening near 90%. Erosion of B near the estimate produces a sharp, threshold-like decline in IPO activity.</span>
+    </p>
+
+    <div class="col" data-reveal style="margin-top:54px">
+      <div class="caveat">
+        <div class="h">◆ A note on what these numbers are</div>
+        <p>The counterfactuals are <em>partial-equilibrium</em> comparative statics: one feature moves while filing selection, acquirer behavior, and market microstructure are held fixed. A full general-equilibrium accounting — firms re-sorting into filing, acquirers responding to target supply, underwriters re-pricing — would attenuate the magnitudes.</p>
+        <p>Within the sample, the conditional completion rate barely moved across the 2001 break (83.7% before, 85.0% after). The aggregate IPO contraction is overwhelmingly a <em>filing-rate</em> phenomenon — which this model holds fixed. The framework speaks to <em>which</em> filers complete, and on what terms, not to how many firms choose to file.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============ 07 · HETEROGENEITY ============ -->
+<section class="band scroll-anchor" id="heterogeneity">
+  <span class="sec-mark">07</span>
+  <div class="wrap">
+    <div class="col" data-reveal>
+      <div class="eyebrow"><span class="no">§ 07</span> Where the Gap Lives</div>
+      <h2 class="head">The model makes <em>three</em> bets</h2>
+      <p class="lead">Proposition IV predicts the VC quality advantage should be sharpest for small firms, for same-industry acquirers, and for cold-market filings. Splitting the 94 withdrawn filers along each dimension tests all three at once.</p>
+    </div>
+
+    <div class="col prose" data-reveal style="margin-top:28px">
+      <p>The data confirm every prediction. The mean-GPME gap between VC-backed and non-VC withdrawals is +0.261 across the full sample. Among <b>small firms</b> it widens to +0.710 and among large firms it reverses — small firms spend more time below V*, where both the &alpha; drift and the lower acceptance threshold apply. The gap is concentrated in <b>same-industry acquisitions</b> (+0.543) and vanishes across industries — exactly where VC acquirer networks generate synergy. And it is wider for <b>cold-market filings</b>, when depressed IPO valuations widen the VC's acceptance wedge.</p>
+    </div>
+
+    <figure class="chart-frame" data-reveal style="margin-top:42px">
+      <div class="chart-title">Fig. 09 — The quality gap across subsamples</div>
+      <div class="chart-sub">Mean risk-adjusted withdrawal return (GPME), venture-backed vs. non-VC, by subsample.</div>
+      <div id="heteroChart"></div>
+      <div class="legend">
+        <div class="it"><span class="sw vc"></span>VC-backed</div>
+        <div class="it"><span class="sw nv"></span>Non-VC</div>
+      </div>
+      <figcaption class="figcap">
+        <span class="tag">FIG. 09</span>
+        <span>Each row connects the two group means; the connector is the gap. It widens dramatically for small firms, same-industry acquirers, and cold-market filings — and reverses where the model predicts no VC network advantage. <b>The mechanism, not selection.</b></span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 08 · IMPLICATIONS ============ -->
+<section class="band band--raised scroll-anchor" id="closing">
+  <span class="sec-mark">08</span>
+  <div class="wrap">
+    <div class="col" data-reveal>
+      <div class="eyebrow"><span class="no">§ 08</span> Implications</div>
+      <h2 class="head">The decline has <em>no single</em> author</h2>
+    </div>
+
+    <div class="col prose" data-reveal style="margin-top:24px">
+      <p>VC value-added prevents firms from deteriorating. The entrepreneurial private benefit sustains the very incentive to go public. Market conditions decide when IPO windows open. And the VC synergy premium selectively redirects the highest-value firms toward M&amp;A — the source of the quality differential that opened this paper. Remove any one of these forces and the IPO landscape shifts substantially; together, they account for what the data show.</p>
+    </div>
+
+    <div class="takeaways" data-reveal style="margin-top:38px">
+      <div class="tk">
+        <div class="ti">01</div>
+        <h4>Policy targets the wrong cost</h4>
+        <p>Interventions aimed at filing and compliance costs miss the mechanism. The decline runs through VC exit incentives and the weakening private benefits of public status — not regulatory burden.</p>
+      </div>
+      <div class="tk">
+        <div class="ti">02</div>
+        <h4>VC both builds and redirects</h4>
+        <p>Venture capital simultaneously creates value and channels it toward M&amp;A. Part of the decline is efficient reallocation — but with a real cost in public-market access to high-growth firms.</p>
+      </div>
+      <div class="tk">
+        <div class="ti">03</div>
+        <h4>Restore the incentive to list</h4>
+        <p>Within the model, rebuilding entrepreneurial incentives for public listing is a far more powerful lever than further reducing the regulatory cost of filing.</p>
+      </div>
+    </div>
+
+    <div class="col" data-reveal style="margin-top:54px">
+      <p class="pull" style="text-align:left;font-size:clamp(1.5rem,3vw,2.4rem)">
+        The IPO decline is not a market failing. It is a market <em>reorganizing</em> — around who controls the exit, and what they want from it.
+      </p>
+    </div>
+
+    <div class="col" data-reveal style="margin-top:48px">
+      <div class="caveat">
+        <div class="h">◆ What the model leaves for later</div>
+        <p>The framework abstracts from dynamic contracting, from VC heterogeneity in matching and specialization, and from the public-market entry channels that emerged after the sample window — SPAC mergers and direct listings. Whether those developments have widened or narrowed the VC synergy premium remains an open question.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <p class="foot__cite" data-reveal>
+      <b>Kim, Jae Yung.</b> 2026. &ldquo;Venture Capital and the Decline of IPOs.&rdquo; Working Paper, University of Exeter Business School.
+    </p>
+    <div class="foot__grid">
+      <div class="foot__col">
+        <div class="k">Author</div>
+        <p>Jae Yung Kim<br>University of Exeter Business School<br>Rennes Drive, Exeter EX4 4PU, UK</p>
+      </div>
+      <div class="foot__col">
+        <div class="k">Classification</div>
+        <p>JEL: G24 · G34 · L26<br>IPO withdrawal · venture capital<br>structural estimation</p>
+      </div>
+      <div class="foot__col">
+        <div class="k">Method</div>
+        <p>Continuous-time real-options model<br>SMM with indirect inference<br>592 filings · 1996–2015</p>
+      </div>
+      <div class="foot__col">
+        <div class="k">Sections</div>
+        <a href="#decline">01 · The Decline</a>
+        <a href="#puzzle">02 · The Puzzle</a>
+        <a href="#model">03 · The Model</a>
+        <a href="#counterfactuals">06 · Counterfactuals</a>
+      </div>
+    </div>
+    <div class="foot__bottom">
+      <span>Figures 01, 03, 08 are schematic recreations; all reported coefficients, shares, and estimates are the paper's own values.</span>
+      <span class="totop" id="totop">↑ Return to top</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+"use strict";
+var RM = matchMedia('(prefers-reduced-motion:reduce)').matches;
+var C = {ink:'#0f0e13',ink2:'#1b1a25',paper:'#efe7d6',prose:'#cdc4b1',dim:'#988f7c',
+  faint:'#6b6453',gold:'#d4ac57',goldB:'#ecca80',vc:'#e4694b',vcS:'#f0a48f',
+  nonvc:'#6ea7c6',nonvcS:'#a9cad9',line:'rgba(239,231,214,.10)',line2:'rgba(239,231,214,.06)'};
+
+/* ---------- helpers ---------- */
+function $(s,c){return (c||document).querySelector(s);}
+function $$(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s));}
+function lerp(d0,d1,r0,r1){return function(v){return r0+(v-d0)/(d1-d0)*(r1-r0);};}
+function smoothPath(p){
+  if(p.length<3) return p.map(function(q,i){return (i?'L':'M')+q.x+','+q.y;}).join('');
+  var d='M'+p[0].x+','+p[0].y;
+  for(var i=0;i<p.length-1;i++){
+    var p0=p[i-1]||p[i],p1=p[i],p2=p[i+1],p3=p[i+2]||p[i+1];
+    d+='C'+(p1.x+(p2.x-p0.x)/6)+','+(p1.y+(p2.y-p0.y)/6)+' '+
+        (p2.x-(p3.x-p1.x)/6)+','+(p2.y-(p3.y-p1.y)/6)+' '+p2.x+','+p2.y;
+  }
+  return d;
+}
+function makeMonotone(xs,ys){
+  var n=xs.length,dx=[],m=[],t=[],i;
+  for(i=0;i<n-1;i++){dx[i]=xs[i+1]-xs[i];m[i]=(ys[i+1]-ys[i])/dx[i];}
+  t[0]=m[0];t[n-1]=m[n-2];
+  for(i=1;i<n-1;i++) t[i]=(m[i-1]*m[i]<=0)?0:(m[i-1]+m[i])/2;
+  for(i=0;i<n-1;i++){
+    if(m[i]===0){t[i]=0;t[i+1]=0;}
+    else{var a=t[i]/m[i],b=t[i+1]/m[i],h=Math.hypot(a,b);
+      if(h>3){var s=3/h;t[i]=s*a*m[i];t[i+1]=s*b*m[i];}}
+  }
+  return function(x){
+    if(x<=xs[0])return ys[0];
+    if(x>=xs[n-1])return ys[n-1];
+    var k=0;while(x>xs[k+1])k++;
+    var hh=dx[k],tt=(x-xs[k])/hh,
+      h00=2*tt*tt*tt-3*tt*tt+1,h10=tt*tt*tt-2*tt*tt+tt,
+      h01=-2*tt*tt*tt+3*tt*tt,h11=tt*tt*tt-tt*tt;
+    return h00*ys[k]+h10*hh*t[k]+h01*ys[k+1]+h11*hh*t[k+1];
+  };
+}
+function svg(w,h){return '<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:auto" '+
+  'xmlns="http://www.w3.org/2000/svg">';}
+
+/* animation arming: returns play fn */
+function armDraw(el,dur,delay){
+  if(RM)return function(){};
+  var len=el.getTotalLength();
+  el.style.strokeDasharray=len;el.style.strokeDashoffset=len;
+  return function(){el.style.transition='stroke-dashoffset '+dur+'s cubic-bezier(.2,.7,.2,1) '+(delay||0)+'s';
+    el.style.strokeDashoffset='0';};
+}
+function armGrow(el,axis,origin,dur,delay){
+  if(RM)return function(){};
+  el.style.transformBox='fill-box';el.style.transformOrigin=origin;
+  el.style.transform=axis==='y'?'scaleY(0)':'scaleX(0)';
+  return function(){el.style.transition='transform '+dur+'s cubic-bezier(.2,.7,.2,1) '+(delay||0)+'s';
+    el.style.transform='none';};
+}
+function armFade(el,dur,delay,dy){
+  if(RM)return function(){};
+  el.style.opacity='0';
+  if(dy)el.style.transform='translateY('+dy+'px)';
+  return function(){el.style.transition='opacity '+dur+'s ease '+(delay||0)+'s,transform '+dur+'s cubic-bezier(.2,.7,.2,1) '+(delay||0)+'s';
+    el.style.opacity='1';if(dy)el.style.transform='none';};
+}
+function register(container,plays){
+  container.classList.add('js-chart');
+  container._play=function(){plays.forEach(function(f){f();});};
+}
+
+/* ============================================================
+   CHART · 01 — the decline
+   ============================================================ */
+function buildDecline(){
+  var cont=$('#declineChart'); if(!cont)return;
+  var W=920,H=360,L=66,R=46,T=34,B=58;
+  var x=lerp(1996,2024,L,W-R), y=lerp(3400,7600,H-B,T);
+  var anchors=[[1996,7322],[2000,7050],[2004,5350],[2008,4720],[2012,4150],[2016,3870],[2020,3705],[2024,3671]];
+  var pts=anchors.map(function(a){return {x:x(a[0]),y:y(a[1])};});
+  var line=smoothPath(pts);
+  var area=line+' L'+x(2024)+','+(H-B)+' L'+x(1996)+','+(H-B)+' Z';
+  var s=svg(W,H);
+  s+='<defs><linearGradient id="dF" x1="0" y1="0" x2="0" y2="1">'+
+     '<stop offset="0" stop-color="'+C.gold+'" stop-opacity=".22"/>'+
+     '<stop offset="1" stop-color="'+C.gold+'" stop-opacity="0"/></linearGradient></defs>';
+  [4000,5000,6000,7000].forEach(function(g){
+    s+='<line x1="'+L+'" y1="'+y(g)+'" x2="'+(W-R)+'" y2="'+y(g)+'" stroke="'+C.line2+'"/>';
+    s+='<text x="'+(L-12)+'" y="'+(y(g)+4)+'" fill="'+C.faint+'" font-size="11" text-anchor="end">'+(g/1000)+'k</text>';
+  });
+  [1996,2010,2024].forEach(function(yr){
+    s+='<text x="'+x(yr)+'" y="'+(H-B+26)+'" fill="'+C.faint+'" font-size="11" text-anchor="middle">'+yr+'</text>';
+  });
+  s+='<path id="dArea" d="'+area+'" fill="url(#dF)"/>';
+  s+='<path id="dLine" d="'+line+'" fill="none" stroke="'+C.gold+'" stroke-width="2.4" stroke-linecap="round"/>';
+  s+='<g id="dP1"><circle cx="'+x(1996)+'" cy="'+y(7322)+'" r="5.5" fill="'+C.goldB+'"/>'+
+     '<circle cx="'+x(1996)+'" cy="'+y(7322)+'" r="11" fill="none" stroke="'+C.gold+'" stroke-opacity=".4"/>'+
+     '<text x="'+(x(1996)+18)+'" y="'+(y(7322)-14)+'" fill="'+C.paper+'" font-size="13">7,322 firms</text>'+
+     '<text x="'+(x(1996)+18)+'" y="'+(y(7322)+2)+'" fill="'+C.faint+'" font-size="10.5" letter-spacing="1">1996 PEAK</text></g>';
+  s+='<g id="dP2"><circle cx="'+x(2024)+'" cy="'+y(3671)+'" r="5.5" fill="'+C.vc+'"/>'+
+     '<circle cx="'+x(2024)+'" cy="'+y(3671)+'" r="11" fill="none" stroke="'+C.vc+'" stroke-opacity=".45"/>'+
+     '<text x="'+(x(2024)-16)+'" y="'+(y(3671)-14)+'" fill="'+C.paper+'" font-size="13" text-anchor="end">3,671 firms</text>'+
+     '<text x="'+(x(2024)-16)+'" y="'+(y(3671)+2)+'" fill="'+C.faint+'" font-size="10.5" letter-spacing="1" text-anchor="end">2024</text></g>';
+  s+='</svg>';
+  cont.innerHTML=s;
+  register(cont,[
+    armDraw($('#dLine',cont),2.6,0),
+    armFade($('#dArea',cont),1.6,1.0),
+    armFade($('#dP1',cont),.7,1.9,8),
+    armFade($('#dP2',cont),.7,2.5,8)
+  ]);
+}
+
+/* ============================================================
+   CHART · 02 — puzzle bars
+   ============================================================ */
+function buildPuzzleBars(){
+  var cont=$('#puzzleBars'); if(!cont)return;
+  var W=920,H=388,base=320,top=58;
+  var y=lerp(0,32,base,top);
+  var bw=88;
+  var bars=[
+    {x:188,v:16.5,c:C.vc,lbl:'VC'},
+    {x:188+bw+12,v:15.2,c:C.nonvc,lbl:'Non-VC'},
+    {x:560,v:27.8,c:C.vc,lbl:'VC'},
+    {x:560+bw+12,v:12.5,c:C.nonvc,lbl:'Non-VC'}
+  ];
+  var s=svg(W,H);
+  [10,20,30].forEach(function(g){
+    s+='<line x1="60" y1="'+y(g)+'" x2="'+(W-30)+'" y2="'+y(g)+'" stroke="'+C.line2+'"/>'+
+       '<text x="48" y="'+(y(g)+4)+'" fill="'+C.faint+'" font-size="11" text-anchor="end">'+g+'%</text>';
+  });
+  s+='<line x1="60" y1="'+base+'" x2="'+(W-30)+'" y2="'+base+'" stroke="'+C.line+'"/>';
+  bars.forEach(function(b,i){
+    var h=base-y(b.v);
+    s+='<rect class="pbar" id="pb'+i+'" x="'+b.x+'" y="'+y(b.v)+'" width="'+bw+'" height="'+h+'" fill="'+b.c+'" rx="1.5"/>';
+    s+='<text id="pv'+i+'" x="'+(b.x+bw/2)+'" y="'+(y(b.v)-14)+'" fill="'+C.paper+'" font-size="20" text-anchor="middle" font-weight="500">'+b.v.toFixed(1)+'%</text>';
+    s+='<text x="'+(b.x+bw/2)+'" y="'+(base+22)+'" fill="'+(i%2?C.nonvcS:C.vcS)+'" font-size="10.5" text-anchor="middle" letter-spacing="1">'+b.lbl.toUpperCase()+'</text>';
+  });
+  // group labels
+  s+='<text x="'+(188+bw+6)+'" y="'+(base+46)+'" fill="'+C.dim+'" font-size="12" text-anchor="middle">WITHDRAWAL RATE</text>';
+  s+='<text x="'+(560+bw+6)+'" y="'+(base+46)+'" fill="'+C.dim+'" font-size="12" text-anchor="middle">POSITIVE-GPME SHARE OF WITHDRAWALS</text>';
+  // brackets
+  var g1L=188,g1R=188+2*bw+12,g1cx=(g1L+g1R)/2;
+  var g2L=560,g2R=560+2*bw+12,g2cx=(g2L+g2R)/2;
+  s+='<g id="pBr1"><line x1="'+g1L+'" y1="148" x2="'+g1R+'" y2="148" stroke="'+C.nonvc+'" stroke-width="1.3"/>'+
+     '<line x1="'+g1L+'" y1="148" x2="'+g1L+'" y2="158" stroke="'+C.nonvc+'" stroke-width="1.3"/>'+
+     '<line x1="'+g1R+'" y1="148" x2="'+g1R+'" y2="158" stroke="'+C.nonvc+'" stroke-width="1.3"/>'+
+     '<text x="'+g1cx+'" y="138" fill="'+C.nonvcS+'" font-size="13" text-anchor="middle" letter-spacing="2">≈ EQUAL</text></g>';
+  s+='<g id="pBr2"><line x1="'+g2L+'" y1="56" x2="'+g2R+'" y2="56" stroke="'+C.vc+'" stroke-width="1.3"/>'+
+     '<line x1="'+g2L+'" y1="56" x2="'+g2L+'" y2="66" stroke="'+C.vc+'" stroke-width="1.3"/>'+
+     '<line x1="'+g2R+'" y1="56" x2="'+g2R+'" y2="66" stroke="'+C.vc+'" stroke-width="1.3"/>'+
+     '<text x="'+g2cx+'" y="46" fill="'+C.vcS+'" font-size="14" text-anchor="middle" letter-spacing="2" font-weight="600">2.2× QUALITY GAP</text></g>';
+  s+='</svg>';
+  cont.innerHTML=s;
+  var plays=[];
+  bars.forEach(function(b,i){
+    plays.push(armGrow($('#pb'+i,cont),'y','bottom',1.0,.15+i*.12));
+    plays.push(armFade($('#pv'+i,cont),.6,.7+i*.12));
+  });
+  plays.push(armFade($('#pBr1',cont),.7,1.2));
+  plays.push(armFade($('#pBr2',cont),.7,1.45));
+  register(cont,plays);
+}
+
+/* ============================================================
+   CHART · 03 — distributions
+   ============================================================ */
+function buildDist(){
+  var cont=$('#distChart'); if(!cont)return;
+  var W=920,H=380,L=58,Rr=58,base=312,top=58;
+  var x=lerp(-1.65,1.45,L,W-Rr);
+  function g(v,m,sd){return Math.exp(-((v-m)*(v-m))/(2*sd*sd));}
+  var xs=[],i;
+  for(i=0;i<=130;i++)xs.push(-1.65+i*(3.10/130));
+  var nv=xs.map(function(v){return 1.00*g(v,-0.52,0.34)+0.13*g(v,0.32,0.52);});
+  var vc=xs.map(function(v){return 0.80*g(v,-0.33,0.43)+0.44*g(v,0.46,0.64);});
+  var mx=Math.max(Math.max.apply(null,nv),Math.max.apply(null,vc));
+  var y=lerp(0,mx*1.06,base,top);
+  function curve(arr){return xs.map(function(v,k){return {x:x(v),y:y(arr[k])};});}
+  function areaPath(arr,fromZero){
+    var p=curve(arr),seg=[];
+    for(var k=0;k<p.length;k++){if(!fromZero||xs[k]>=0)seg.push(p[k]);}
+    if(!seg.length)return '';
+    var d=smoothPath(seg);
+    return d+' L'+seg[seg.length-1].x+','+base+' L'+seg[0].x+','+base+' Z';
+  }
+  var s=svg(W,H);
+  s+='<defs>'+
+    '<linearGradient id="vF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+C.vc+'" stop-opacity=".34"/><stop offset="1" stop-color="'+C.vc+'" stop-opacity="0"/></linearGradient>'+
+    '<linearGradient id="nF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+C.nonvc+'" stop-opacity=".30"/><stop offset="1" stop-color="'+C.nonvc+'" stop-opacity="0"/></linearGradient>'+
+    '</defs>';
+  s+='<line x1="'+L+'" y1="'+base+'" x2="'+(W-Rr)+'" y2="'+base+'" stroke="'+C.line+'"/>';
+  [-1.5,-1,-0.5,0,0.5,1].forEach(function(t){
+    s+='<text x="'+x(t)+'" y="'+(base+24)+'" fill="'+C.faint+'" font-size="11" text-anchor="middle">'+t+'</text>';
+  });
+  s+='<text x="'+((L+W-Rr)/2)+'" y="'+(base+44)+'" fill="'+C.dim+'" font-size="11" text-anchor="middle" letter-spacing="1.5">RISK-ADJUSTED RETURN · NORMALIZED GPME</text>';
+  // zero line
+  s+='<line x1="'+x(0)+'" y1="'+top+'" x2="'+x(0)+'" y2="'+base+'" stroke="'+C.gold+'" stroke-width="1" stroke-dasharray="3 4" stroke-opacity=".6"/>';
+  s+='<text x="'+(x(0)+7)+'" y="'+(top+12)+'" fill="'+C.gold+'" font-size="10.5" letter-spacing="1">GPME = 0</text>';
+  // clipped positive fills (stronger)
+  s+='<g id="dG">';
+  s+='<path d="'+areaPath(nv,false)+'" fill="url(#nF)" opacity=".55"/>';
+  s+='<path d="'+areaPath(vc,false)+'" fill="url(#vF)" opacity=".55"/>';
+  s+='<path d="'+areaPath(nv,true)+'" fill="'+C.nonvc+'" fill-opacity=".30"/>';
+  s+='<path d="'+areaPath(vc,true)+'" fill="'+C.vc+'" fill-opacity=".32"/>';
+  s+='</g>';
+  s+='<path id="dNv" d="'+smoothPath(curve(nv))+'" fill="none" stroke="'+C.nonvc+'" stroke-width="2.4"/>';
+  s+='<path id="dVc" d="'+smoothPath(curve(vc))+'" fill="none" stroke="'+C.vc+'" stroke-width="2.4"/>';
+  // mean ticks
+  s+='<path d="M'+x(-0.458)+','+base+' l-5,11 l10,0 Z" fill="'+C.nonvc+'"/>';
+  s+='<path d="M'+x(-0.241)+','+base+' l-5,11 l10,0 Z" fill="'+C.vc+'"/>';
+  // annotations
+  s+='<g id="dA1"><text x="'+x(0.74)+'" y="'+(top+86)+'" fill="'+C.vcS+'" font-size="13" text-anchor="middle">27.8% positive</text>'+
+     '<text x="'+x(0.74)+'" y="'+(top+102)+'" fill="'+C.faint+'" font-size="10">VC right tail</text></g>';
+  s+='<g id="dA2"><text x="'+x(0.62)+'" y="'+(base-26)+'" fill="'+C.nonvcS+'" font-size="13" text-anchor="middle">12.5% positive</text>'+
+     '<text x="'+x(0.62)+'" y="'+(base-12)+'" fill="'+C.faint+'" font-size="10">non-VC</text></g>';
+  s+='</svg>';
+  cont.innerHTML=s;
+  register(cont,[
+    armDraw($('#dNv',cont),2.0,.2),
+    armDraw($('#dVc',cont),2.0,.5),
+    armFade($('#dG',cont),1.4,.8),
+    armFade($('#dA1',cont),.7,1.7),
+    armFade($('#dA2',cont),.7,1.95)
+  ]);
+}
+
+/* ============================================================
+   CHART · 06 — moment fit dumbbells
+   ============================================================ */
+function buildMoments(){
+  var cont=$('#momentChart'); if(!cont)return;
+  var rows=[
+    ['VC share, withdrawals',.574,.687],
+    ['Mean GPME · VC wd.',-.241,-.195],
+    ['Mean GPME · non-VC wd.',-.458,-.616],
+    ['Positive-GPME · VC',.278,.280],
+    ['Positive-GPME · non-VC',.125,.056],
+    ['IV interaction · Wd × VC',1.121,1.033],
+    ['Withdrawal timing (yr)',4.050,3.746],
+    ['Post-IPO holding (yr)',5.221,5.065],
+    ['Cold withdrawal rate',.236,.173],
+    ['Hot withdrawal rate',.081,.092],
+    ['Size gradient',-.037,.033],
+    ['Std. GPME · VC wd.',1.196,.889]
+  ];
+  var W=920,rowH=37,T=20,H=rows.length*rowH+T+30;
+  var tL=336,tR=712;
+  var s=svg(W,H);
+  var plays=[];
+  rows.forEach(function(r,i){
+    var cy=T+i*rowH+rowH/2;
+    var d=r[1],m=r[2];
+    var lo=Math.min(d,m),hi=Math.max(d,m),rng=(hi-lo)||Math.max(Math.abs(hi),0.1);
+    var x=lerp(lo-rng*0.55,hi+rng*0.55,tL,tR);
+    if(i===5) s+='<rect x="6" y="'+(cy-rowH/2)+'" width="'+(W-12)+'" height="'+rowH+'" fill="'+C.vc+'" fill-opacity=".06"/>';
+    s+='<line x1="6" y1="'+(cy+rowH/2)+'" x2="'+(W-6)+'" y2="'+(cy+rowH/2)+'" stroke="'+C.line2+'"/>';
+    s+='<text x="10" y="'+(cy+4)+'" fill="'+(i===5?C.vcS:C.paper)+'" font-size="13">'+r[0]+'</text>';
+    s+='<line class="mC" id="mc'+i+'" x1="'+x(d)+'" y1="'+cy+'" x2="'+x(m)+'" y2="'+cy+'" stroke="'+C.gold+'" stroke-width="1.6" stroke-opacity=".5"/>';
+    s+='<circle class="mD" id="md'+i+'" cx="'+x(d)+'" cy="'+cy+'" r="5.5" fill="'+C.gold+'"/>';
+    s+='<circle class="mM" id="mm'+i+'" cx="'+x(m)+'" cy="'+cy+'" r="5" fill="'+C.ink+'" stroke="'+C.goldB+'" stroke-width="1.8"/>';
+    s+='<text x="744" y="'+(cy+4)+'" fill="'+C.gold+'" font-size="12">'+d.toFixed(3)+'</text>';
+    s+='<text x="822" y="'+(cy+4)+'" fill="'+C.dim+'" font-size="9" text-anchor="middle">vs</text>';
+    s+='<text x="912" y="'+(cy+4)+'" fill="'+C.goldB+'" font-size="12" text-anchor="end">'+m.toFixed(3)+'</text>';
+  });
+  s+='</svg>';
+  cont.innerHTML=s;
+  rows.forEach(function(r,i){
+    plays.push(armFade($('#mc'+i,cont),.6,.05+i*.05));
+    plays.push(armFade($('#md'+i,cont),.5,.05+i*.05));
+    plays.push(armFade($('#mm'+i,cont),.5,.22+i*.05));
+  });
+  register(cont,plays);
+}
+
+/* ============================================================
+   CHART · 07 — counterfactual diverging bars
+   ============================================================ */
+function buildCF(){
+  var cont=$('#cfChart'); if(!cont)return;
+  var data=[
+    {n:'No private benefit',sub:'B = 0',v:-12.09,lo:-13.67,hi:-9.36},
+    {n:'No VC value-added',sub:'α = 0',v:-2.65,lo:-3.60,hi:-1.82},
+    {n:'No VC synergy premium',sub:'η = σ = 0',v:2.10,lo:1.08,hi:3.97},
+    {n:'No α-application',sub:'V* → 0',v:2.21,lo:0.99,hi:3.95},
+    {n:'Permanent hot market',sub:'frac hot = 1',v:6.39,lo:2.74,hi:7.99}
+  ];
+  var W=960,rowH=68,T=58,H=data.length*rowH+T+44;
+  var cL=290,cR=936;
+  var x=lerp(-15.5,12,cL,cR),zero=x(0),bh=22;
+  var s=svg(W,H);
+  [-10,-5,5,10].forEach(function(g){
+    s+='<line x1="'+x(g)+'" y1="'+(T-16)+'" x2="'+x(g)+'" y2="'+(H-30)+'" stroke="'+C.line2+'"/>'+
+       '<text x="'+x(g)+'" y="'+(H-12)+'" fill="'+C.faint+'" font-size="10.5" text-anchor="middle">'+(g>0?'+':'')+g+'</text>';
+  });
+  s+='<text x="'+zero+'" y="'+(H-12)+'" fill="'+C.gold+'" font-size="10.5" text-anchor="middle">0</text>';
+  s+='<line x1="'+zero+'" y1="'+(T-26)+'" x2="'+zero+'" y2="'+(H-30)+'" stroke="'+C.gold+'" stroke-width="1.3" stroke-opacity=".7"/>';
+  s+='<text x="'+zero+'" y="'+(T-34)+'" fill="'+C.gold+'" font-size="10.5" text-anchor="middle" letter-spacing="1.5">MODEL-SIMULATED BASELINE · 89.6% COMPLETION</text>';
+  s+='<text x="'+(W-20)+'" y="'+(H-12)+'" fill="'+C.faint+'" font-size="10.5" text-anchor="end">Δ COMPLETION (pp)</text>';
+  var plays=[];
+  data.forEach(function(r,i){
+    var cy=T+i*rowH+rowH/2;
+    var pos=r.v>0,col=pos?C.nonvc:C.vc;
+    var bx=pos?zero:x(r.v),bw=Math.abs(x(r.v)-zero);
+    s+='<text x="20" y="'+(cy-3)+'" fill="'+C.paper+'" font-size="15">'+r.n+'</text>';
+    s+='<text x="20" y="'+(cy+15)+'" fill="'+C.faint+'" font-size="11">'+r.sub+'</text>';
+    s+='<rect class="cfb" id="cfb'+i+'" x="'+bx+'" y="'+(cy-bh/2)+'" width="'+bw+'" height="'+bh+'" fill="'+col+'" rx="1.5"/>';
+    // CI whisker
+    s+='<g id="cfw'+i+'"><line x1="'+x(r.lo)+'" y1="'+cy+'" x2="'+x(r.hi)+'" y2="'+cy+'" stroke="'+C.paper+'" stroke-width="1.4" stroke-opacity=".75"/>'+
+       '<line x1="'+x(r.lo)+'" y1="'+(cy-5)+'" x2="'+x(r.lo)+'" y2="'+(cy+5)+'" stroke="'+C.paper+'" stroke-width="1.4" stroke-opacity=".75"/>'+
+       '<line x1="'+x(r.hi)+'" y1="'+(cy-5)+'" x2="'+x(r.hi)+'" y2="'+(cy+5)+'" stroke="'+C.paper+'" stroke-width="1.4" stroke-opacity=".75"/></g>';
+    var tx=pos?x(r.hi)+10:x(r.lo)-10;
+    s+='<text id="cft'+i+'" x="'+tx+'" y="'+(cy+5)+'" fill="'+(pos?C.nonvcS:C.vcS)+'" font-size="16" font-weight="600" text-anchor="'+(pos?'start':'end')+'">'+(pos?'+':'−')+Math.abs(r.v).toFixed(2)+' pp</text>';
+  });
+  s+='</svg>';
+  cont.innerHTML=s;
+  data.forEach(function(r,i){
+    var pos=r.v>0;
+    plays.push(armGrow($('#cfb'+i,cont),'x',pos?'left':'right',.95,.1+i*.13));
+    plays.push(armFade($('#cfw'+i,cont),.6,.7+i*.13));
+    plays.push(armFade($('#cft'+i,cont),.6,.8+i*.13));
+  });
+  register(cont,plays);
+}
+
+/* ============================================================
+   CHART · 08 — B S-curve (interactive)
+   ============================================================ */
+var Bfn=makeMonotone([0,0.10,0.20,0.267,0.35,0.50],[77.5,80.6,85.1,89.5,90.0,90.3]);
+function buildBCurve(){
+  var cont=$('#bCurve'); if(!cont)return;
+  var W=520,H=358,L=50,Rr=22,T=28,Bb=52;
+  var x=lerp(0,0.5,L,W-Rr),y=lerp(74,92,H-Bb,T);
+  var pts=[],i;
+  for(i=0;i<=120;i++){var b=i*0.5/120;pts.push({x:x(b),y:y(Bfn(b))});}
+  var line=pts.map(function(p,k){return (k?'L':'M')+p.x.toFixed(1)+','+p.y.toFixed(1);}).join('');
+  var area=line+' L'+x(0.5)+','+(H-Bb)+' L'+x(0)+','+(H-Bb)+' Z';
+  var s=svg(W,H);
+  s+='<defs><linearGradient id="bF" x1="0" y1="0" x2="0" y2="1">'+
+     '<stop offset="0" stop-color="'+C.gold+'" stop-opacity=".24"/>'+
+     '<stop offset="1" stop-color="'+C.gold+'" stop-opacity="0"/></linearGradient></defs>';
+  [78,82,86,90].forEach(function(g){
+    s+='<line x1="'+L+'" y1="'+y(g)+'" x2="'+(W-Rr)+'" y2="'+y(g)+'" stroke="'+C.line2+'"/>'+
+       '<text x="'+(L-9)+'" y="'+(y(g)+4)+'" fill="'+C.faint+'" font-size="10" text-anchor="end">'+g+'%</text>';
+  });
+  [0,0.25,0.5].forEach(function(t){
+    s+='<text x="'+x(t)+'" y="'+(H-Bb+22)+'" fill="'+C.faint+'" font-size="10" text-anchor="middle">'+t.toFixed(2)+'</text>';
+  });
+  s+='<text x="'+((L+W-Rr)/2)+'" y="'+(H-12)+'" fill="'+C.dim+'" font-size="10" text-anchor="middle" letter-spacing="1.5">PRIVATE BENEFIT · B</text>';
+  s+='<path id="bArea" d="'+area+'" fill="url(#bF)"/>';
+  s+='<path id="bLine" d="'+line+'" fill="none" stroke="'+C.goldB+'" stroke-width="2.6" stroke-linecap="round"/>';
+  // estimate marker
+  s+='<line x1="'+x(0.267)+'" y1="'+T+'" x2="'+x(0.267)+'" y2="'+(H-Bb)+'" stroke="'+C.vc+'" stroke-width="1" stroke-dasharray="3 4" stroke-opacity=".55"/>';
+  s+='<text x="'+(x(0.267)+6)+'" y="'+(T+12)+'" fill="'+C.vcS+'" font-size="10">B = 0.267</text>';
+  // live marker
+  s+='<g id="bMark"><line id="bMx" x1="0" y1="0" x2="0" y2="0" stroke="'+C.gold+'" stroke-width="1" stroke-dasharray="2 3" stroke-opacity=".6"/>'+
+     '<circle id="bDot" r="7" fill="'+C.goldB+'" stroke="'+C.ink+'" stroke-width="2.5"/></g>';
+  s+='</svg>';
+  cont.innerHTML=s;
+  cont._bx=x;cont._by=y;cont._H=H;cont._Bb=Bb;
+  register(cont,[armDraw($('#bLine',cont),2.0,.1),armFade($('#bArea',cont),1.3,.7)]);
+  updateBMarker(0.267);
+}
+function updateBMarker(b){
+  var cont=$('#bCurve'); if(!cont||!cont._bx)return;
+  var comp=Bfn(b),px=cont._bx(b),py=cont._by(comp);
+  var dot=$('#bDot',cont),mx=$('#bMx',cont);
+  if(dot){dot.setAttribute('cx',px);dot.setAttribute('cy',py);}
+  if(mx){mx.setAttribute('x1',px);mx.setAttribute('x2',px);mx.setAttribute('y1',py);mx.setAttribute('y2',cont._H-cont._Bb);}
+  var rd=$('#bRead'),bv=$('#bVal');
+  if(rd)rd.textContent=comp.toFixed(1);
+  if(bv)bv.textContent=b.toFixed(3);
+  var hint=$('#bHint');
+  if(hint){
+    if(b<0.12)hint.textContent='Below B ≈ 0.12 the curve plunges — most founders would now accept M&A offers they once refused.';
+    else if(b<0.27)hint.textContent='This is the steep stretch: a small erosion of B here costs a large block of IPO completions.';
+    else hint.textContent='At and above the estimated B = 0.267 the curve flattens near 90% — extra private benefit barely moves the decision.';
+  }
+}
+
+/* ============================================================
+   CHART · 09 — heterogeneity dumbbells
+   ============================================================ */
+function buildHetero(){
+  var cont=$('#heteroChart'); if(!cont)return;
+  var rows=[
+    {g:'Small firms',t:'SIZE',nv:-0.753,vc:-0.042,gap:0.710,n:'28 / 19'},
+    {g:'Large firms',t:'SIZE',nv:-0.189,vc:-0.362,gap:-0.173,n:'26 / 21'},
+    {g:'Same-industry acquirer',t:'ACQUIRER OVERLAP',nv:-0.514,vc:0.029,gap:0.543,n:'26 / 23'},
+    {g:'Cross-industry acquirer',t:'ACQUIRER OVERLAP',nv:-0.379,vc:-0.405,gap:-0.026,n:'28 / 17'},
+    {g:'Cold-market filing',t:'MARKET STATE',nv:-0.663,vc:-0.293,gap:0.369,n:'31 / 16'},
+    {g:'Hot-market filing',t:'MARKET STATE',nv:-0.319,vc:-0.064,gap:0.255,n:'23 / 24'}
+  ];
+  var W=920,rowH=56,T=46,H=rows.length*rowH+T+34;
+  var x=lerp(-0.82,0.18,256,808),zero=x(0);
+  var s=svg(W,H);
+  [-0.6,-0.3,0.3].forEach(function(g){
+    s+='<line x1="'+x(g)+'" y1="'+(T-20)+'" x2="'+x(g)+'" y2="'+(H-26)+'" stroke="'+C.line2+'"/>'+
+       '<text x="'+x(g)+'" y="'+(H-10)+'" fill="'+C.faint+'" font-size="10.5" text-anchor="middle">'+g.toFixed(1)+'</text>';
+  });
+  s+='<line x1="'+zero+'" y1="'+(T-20)+'" x2="'+zero+'" y2="'+(H-26)+'" stroke="'+C.gold+'" stroke-width="1.1" stroke-opacity=".6"/>';
+  s+='<text x="'+zero+'" y="'+(H-10)+'" fill="'+C.gold+'" font-size="10.5" text-anchor="middle">0</text>';
+  s+='<text x="'+zero+'" y="'+(T-28)+'" fill="'+C.gold+'" font-size="10" text-anchor="middle" letter-spacing="1.5">MEAN WITHDRAWAL GPME →</text>';
+  var plays=[];
+  rows.forEach(function(r,i){
+    var cy=T+i*rowH+rowH/2;
+    var pos=r.gap>0,conC=pos?C.vc:C.nonvc;
+    var div=(i===1||i===3)?C.line:C.line2;
+    s+='<line x1="6" y1="'+(cy+rowH/2)+'" x2="'+(W-6)+'" y2="'+(cy+rowH/2)+'" stroke="'+div+'"/>';
+    s+='<text x="14" y="'+(cy-2)+'" fill="'+C.paper+'" font-size="13.5">'+r.g+'</text>';
+    s+='<text x="14" y="'+(cy+15)+'" fill="'+C.faint+'" font-size="9.5" letter-spacing="1">'+r.t+' · N '+r.n+'</text>';
+    s+='<line class="hC" id="hc'+i+'" x1="'+x(r.nv)+'" y1="'+cy+'" x2="'+x(r.vc)+'" y2="'+cy+'" stroke="'+conC+'" stroke-width="2.4" stroke-opacity=".6"/>';
+    s+='<circle class="hN" id="hn'+i+'" cx="'+x(r.nv)+'" cy="'+cy+'" r="6.5" fill="'+C.nonvc+'"/>';
+    s+='<circle class="hV" id="hv'+i+'" cx="'+x(r.vc)+'" cy="'+cy+'" r="6.5" fill="'+C.vc+'"/>';
+    s+='<text id="hg'+i+'" x="'+(W-14)+'" y="'+(cy+5)+'" fill="'+(pos?C.vcS:C.nonvcS)+'" font-size="15" font-weight="600" text-anchor="end">'+(pos?'+':'−')+Math.abs(r.gap).toFixed(3)+'</text>';
+  });
+  s+='</svg>';
+  cont.innerHTML=s;
+  rows.forEach(function(r,i){
+    plays.push(armFade($('#hc'+i,cont),.6,.12+i*.1));
+    plays.push(armFade($('#hn'+i,cont),.5,.12+i*.1));
+    plays.push(armFade($('#hv'+i,cont),.5,.28+i*.1));
+    plays.push(armFade($('#hg'+i,cont),.5,.45+i*.1));
+  });
+  register(cont,plays);
+}
+
+/* ============================================================
+   OBSERVERS · counters · nav · scroll
+   ============================================================ */
+function runCounter(el){
+  if(el._done)return; el._done=true;
+  var to=parseFloat(el.dataset.to),dec=parseInt(el.dataset.dec||'0',10),
+      pre=el.dataset.prefix||'',suf=el.dataset.suffix||'';
+  if(RM){el.textContent=pre+to.toFixed(dec)+suf;return;}
+  var dur=1500,t0=performance.now();
+  (function tick(now){
+    var p=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-p,3);
+    el.textContent=pre+(to*e).toFixed(dec)+suf;
+    if(p<1)requestAnimationFrame(tick);
+    else el.textContent=pre+to.toFixed(dec)+suf;
+  })(t0);
+}
+
+function initObservers(){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting)return;
+      var el=e.target;
+      el.classList.add('in');
+      $$('[data-count]',el).forEach(runCounter);
+      $$('.js-chart',el).forEach(function(c){
+        if(c._play&&!c._played){c._played=true;setTimeout(c._play,80);}
+      });
+      io.unobserve(el);
+    });
+  },{rootMargin:'-8% 0px -12% 0px',threshold:0});
+  $$('[data-reveal]').forEach(function(el){io.observe(el);});
+
+  // nav active
+  var links={};
+  $$('#nav a').forEach(function(a){links[a.getAttribute('href').slice(1)]=a;});
+  var nio=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        Object.keys(links).forEach(function(k){links[k].classList.remove('active');});
+        if(links[e.target.id])links[e.target.id].classList.add('active');
+      }
+    });
+  },{rootMargin:'-45% 0px -50% 0px',threshold:0});
+  ['decline','puzzle','model','evidence','estimates','counterfactuals','heterogeneity','closing']
+    .forEach(function(id){var s=document.getElementById(id);if(s)nio.observe(s);});
+}
+
+function initScroll(){
+  var bar=$('#progbar'),mast=$('#masthead'),last=0;
+  function onScroll(){
+    var st=window.pageYOffset||document.documentElement.scrollTop;
+    var max=document.documentElement.scrollHeight-window.innerHeight;
+    if(bar)bar.style.width=(max>0?(st/max*100):0)+'%';
+    if(mast){
+      if(st>last&&st>240)mast.classList.add('hidden');
+      else mast.classList.remove('hidden');
+    }
+    last=st;
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+  var tt=$('#totop');
+  if(tt)tt.addEventListener('click',function(){window.scrollTo({top:0,behavior:RM?'auto':'smooth'});});
+}
+
+function initHero(){
+  var hero=$('#top');
+  var line=$('#heroLine'),area=$('#heroArea'),p1=$('#heroPt1'),p2=$('#heroPt2');
+  if(line&&!RM){
+    var len=line.getTotalLength();
+    line.style.strokeDasharray=len;line.style.strokeDashoffset=len;
+    requestAnimationFrame(function(){
+      line.style.transition='stroke-dashoffset 3s cubic-bezier(.2,.7,.2,1) .3s';
+      line.style.strokeDashoffset='0';
+    });
+  }
+  if(area){area.style.transition='opacity 1.6s ease 1.1s';requestAnimationFrame(function(){area.style.opacity='1';});}
+  [[p1,1.9],[p2,2.5]].forEach(function(q){
+    if(q[0]){q[0].style.transition='opacity .9s ease '+q[1]+'s';
+      requestAnimationFrame(function(){q[0].style.opacity='1';});}
+  });
+  if(hero)requestAnimationFrame(function(){hero.classList.add('ready');});
+  // subtle parallax
+  if(!RM){
+    var bg=$('.hero__bg');
+    window.addEventListener('scroll',function(){
+      var y=window.pageYOffset;
+      if(bg&&y<window.innerHeight)bg.style.transform='translateY('+(y*0.18)+'px)';
+    },{passive:true});
+  }
+}
+
+function initBSlider(){
+  var sl=$('#bSlider'); if(!sl)return;
+  sl.addEventListener('input',function(){updateBMarker(parseFloat(sl.value));});
+}
+
+/* ---------- boot ---------- */
+function safe(fn){try{fn();}catch(e){}}
+function boot(){
+  [buildDecline,buildPuzzleBars,buildDist,buildMoments,buildCF,buildBCurve,buildHetero,
+   initObservers,initScroll,initHero,initBSlider].forEach(safe);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);
+else boot();
+})();
+</script>
+</body>
+</html>
